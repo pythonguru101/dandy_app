@@ -1,4 +1,12 @@
 {
   "name": "dandyapp",
-  "displayName": "dandyapp"
+  "displayName": "dandyapp",
+  "plugins": [
+    [
+      "react-native-wifi-reborn",
+      {
+        "fineLocationPermission": false
+      }
+    ]
+  ]
 }

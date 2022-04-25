@@ -27,6 +27,6 @@ let store = createStore(
 
 let persistor = persistStore(store);
 
-sagaMiddleWare.run(SagaActions);
+// sagaMiddleWare.run(SagaActions);
 
 export { store, persistor };

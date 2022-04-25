@@ -19,6 +19,8 @@ target 'dandyapp' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod 'RNWifi', :path => '../node_modules/react-native-wifi-reborn'
+
   target 'dandyappTests' do
     inherit! :complete
     # Pods for testing
