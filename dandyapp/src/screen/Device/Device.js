@@ -1,7 +1,13 @@
 import {
+    StyleSheet,
     Text,
     View,
+    Button,
+    TextInput,
     PermissionsAndroid,
+    TouchableOpacity,
+    Modal,
+    Pressable,
     KeyboardAvoidingView,
     Platform,
     SafeAreaView
@@ -12,75 +18,52 @@ import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import CircularButton from '../../components/CircularButton/CircularButton';
 import styles from './Style'
 import Card from '../../components/Card/Card';
-import devices from '../../data/devices';
 
-const Home = () => {
+const Device = () => {
 
     const [ssid, setSsid] = React.useState('');
+    const [password, setPassword] = React.useState('');
     const [deviceList, setWifiList] = React.useState([]);
     const [wifiStatus, setWifiStatus] = React.useState('');
+    const [wifiConnected, setWifiConnected] = React.useState(false);
+    const [wifiConnecting, setWifiConnecting] = React.useState(false);
     const [permission, setPermission] = React.useState('');
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalText, setModalText] = React.useState('');
 
 
     const connectToWifi = () => {
         setWifiConnecting(true);
-        if (Platform.OS === 'android') {
-            WifiManager.connectToProtectedSSID(devices[0].SSID, devices[0].password, false)
-                .then(wifi => {
-                    setWifiConnecting(false);
-                    setWifiConnected(true);
-                    setWifiStatus(wifi.status);
-                    console.log("connected", wifi)
-                })
-                .catch(error => {
-                    console.log(error);
-                    setWifiConnecting(false);
-                    setWifiConnected(false);
-                });
-        }
-        else {
-            WifiManager.connectToProtectedSSIDPrefix(devices[0].SSID, devices[0].password, false).then(wifi => {
+        WifiManager.connectToProtectedSSID(ssid, password, false)
+            .then(wifi => {
                 setWifiConnecting(false);
                 setWifiConnected(true);
                 setWifiStatus(wifi.status);
                 console.log("connected", wifi)
-            }
-            ).catch(error => {
+            })
+            .catch(error => {
                 console.log(error);
                 setWifiConnecting(false);
                 setWifiConnected(false);
-            }
-            );
-        }
+            });
     };
 
     const disconnectFromWifi = (ssid) => {
 
-        if (Platform.OS === 'ios') {
 
-            WifiManager.disconnectFromSSID(ssid)
-                .then(wifi => {
-                    console.log(wifi)
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-        }
-
-        else {
-            WifiManager.disconnect()
-        }
+        // WifiManager.disconnectFromSSID(ssid)
+        //     .then(wifi => {
+        //         console.log(wifi)
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //     });
     };
 
     const getDeviceList = async () => {
-        if (Platform.OS === 'android') {
-            await WifiManager.loadWifiList().then(wifiList => {
-                setWifiList(wifiList);
-            });
-        }
-        else {
-            connectToWifi()
-        }
+        await WifiManager.loadWifiList().then(wifiList => {
+            setWifiList(wifiList);
+        });
 
     };
 
@@ -153,8 +136,12 @@ const Home = () => {
 
     };
 
+
+
+
+
     React.useEffect(() => {
-        console.log(devices)
+
         getPermission()
         if (permission === PermissionsAndroid.RESULTS.GRANTED || permission === RESULTS.GRANTED) {
             getWifiStatus();
@@ -164,47 +151,103 @@ const Home = () => {
         }
     }, [permission, wifiStatus]);
 
+    const onChangePassword = (text) => {
+        setPassword(text);
+    }
+
 
     return (
         <SafeAreaView style={styles.container}>
-            {ssid !== '' && <Card
+            <Card
                 name={ssid}
                 count={100}
-                onTap={() =>
-                    disconnectFromWifi(ssid)
+                onTap={() => {
+                    console.log("Tapped")
+                }
                 }
                 onWHoleTap={() => console.log("Tapped")}
-                buttonText={"Disconnect"}
-            />}
+                buttonText="Connect"
+            />
             <KeyboardAvoidingView
                 style={{ alignItems: 'center' }}
             >
+
+                {/* <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            Alert.alert("Modal has been closed.");
+                            setModalVisible(!modalVisible);
+                        }}
+                    >
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <Text style={styles.modalText}>{modalText}</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={onChangePassword}
+                                    value={password}
+                                    placeholder="password"
+                                    keyboardType="default"
+                                />
+                                <View style={{ flexDirection: "row", justifyContent: "space-between" }} >
+                                    <Pressable
+                                        style={[styles.button, styles.buttonConnect]}
+                                        onPress={() => connectToWifi()}
+                                    >
+                                        <Text style={styles.textStyle}>Connect</Text>
+                                    </Pressable>
+                                    <Pressable
+                                        style={[styles.button, styles.buttonCancel]}
+                                        onPress={() => setModalVisible(!modalVisible)}
+                                    >
+                                        <Text style={styles.textStyle}>Cancel</Text>
+                                    </Pressable>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal> */}
+
+
+                {/* <Text>Home</Text> */}
+                <View>
+                    <Text>Status: {wifiStatus || "No Dandy Bot Connected"}</Text>
+                </View>
+                {/* wifi list */}
+
                 <View>
                     <CircularButton
-                        buttonText={"Add Device"}
-                        onTap={() => getDeviceList()}
+                        buttonText={wifiConnected === true ? "Disonnect" : "Connect"}
+                        onTap={() => wifiConnected == true ? WifiManager.disconnect() : getDeviceList()}
                     />
+
+                    <Text>Available Devices</Text>
                     {deviceList.length > 0 ? deviceList.map((wifi, index) => {
+
                         console.log("mapped", wifi.SSID)
                         return (
-                            <Card
-                                key={index}
-                                name={wifi.SSID}
-                                onTap={() => {
-                                    console.log("Tapped")
-                                }
-                                }
-                                onWHoleTap={() => console.log("Tapped")}
-                                buttonText={wifi.SSID === ssid ? "Connected" : "Connect"}
-                            />
+                            <TouchableOpacity key={index} onPress={() => {
+                                setModalVisible(true)
+                                setModalText(wifi.SSID)
+
+                            }}>
+                                <View style={{ flexDirection: "row", backgroundColor: "#B8FFF9" }} >
+                                    <Text>{index + 1}{". "}</Text>
+                                    <Text>{wifi.SSID}{"  "}</Text>
+                                    <Text>{wifi.BSSID}</Text>
+                                </View>
+                            </TouchableOpacity>
                         )
-                    }) : <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to connect</Text>
-                    }
+
+                    }) : <Text>No Devices found</Text>}
                 </View>
+
             </KeyboardAvoidingView>
+
         </SafeAreaView>
     )
 }
 
-export default Home
+export default Device
 
