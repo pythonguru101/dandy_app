@@ -4,7 +4,7 @@ import {
 
 const initialState = {
   loading: true,
-  count: 0
+  wifi: "",
 };
 
 const AuthReducer = (state = initialState, action) => {
@@ -13,7 +13,7 @@ const AuthReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        count: state.count + 1
+        count: action.payload,
       };
     default:
       return state;

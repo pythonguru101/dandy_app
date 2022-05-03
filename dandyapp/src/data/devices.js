@@ -1,9 +1,6 @@
 const robot = [
-    { SSID: "Dandy", password: "12345678" },
-    { SSID: "Dandy2", password: "12345678" },
-    { SSID: "Dandy3", password: "12345678" },
-    { SSID: "Dandy4", password: "12345678" },
-    { SSID: "Dandy5", password: "12345678" },
+    { SSID: "Baler Dunia", password: "balerjibon" },
+    { SSID: "Ajob 5G", password: "baler_5G" },
 ]
 
 

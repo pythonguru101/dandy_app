@@ -5,12 +5,12 @@ const Card = ({ name, count, buttonText, onTap, onWHoleTap }) => {
 
     return (
         <View>
-            <TouchableOpacity style={styles.card} onPress={() => onWHoleTap}>
+            <TouchableOpacity style={styles.card} onPress={onWHoleTap}>
                 <Image style={styles.image} source={{ uri: "https://img.icons8.com/stickers/100/000000/robot.png" }} />
                 <View style={styles.cardContent}>
                     <Text style={styles.name}>{name}</Text>
                     {count && <Text style={styles.count}>Battery:{count}%</Text>}
-                    <TouchableOpacity style={styles.disconnectButton} onPress={() => onTap}>
+                    <TouchableOpacity style={styles.disconnectButton} onPress={onTap}>
                         <Text style={styles.followButtonText}>{buttonText}</Text>
                     </TouchableOpacity>
 

@@ -4,51 +4,81 @@ import {
     PermissionsAndroid,
     KeyboardAvoidingView,
     Platform,
-    SafeAreaView
+    SafeAreaView,
+    ScrollView,
 } from 'react-native'
-import React from 'react'
+import React,{useState,useEffect,useCallback} from 'react'
 import WifiManager from "react-native-wifi-reborn";
 import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import CircularButton from '../../components/CircularButton/CircularButton';
 import styles from './Style'
 import Card from '../../components/Card/Card';
 import devices from '../../data/devices';
+import {useDispatch,useSelector} from 'react-redux';
+import {currentConnection}from '../../redux/Actions/index'
+import NetInfo from "@react-native-community/netinfo";
+import { useNavigation } from '@react-navigation/native';
+
+
 
 const Home = () => {
 
-    const [ssid, setSsid] = React.useState('');
-    const [deviceList, setWifiList] = React.useState([]);
-    const [wifiStatus, setWifiStatus] = React.useState('');
-    const [permission, setPermission] = React.useState('');
+    const [ssid, setSsid] = useState('');
+    const [deviceList, setWifiList] = useState([]);
+    const [wifiStatus, setWifiStatus] = useState('');
+    const [permission, setPermission] = useState('');
+    const [wifiConnected,setWifiConnected] = useState(false);
+    const [wifiConnecting,setWifiConnecting] = useState(false);
+    const [isWifiEnabled,setIsWifiEnabled] = useState(false);
+    const dispatch= useDispatch();
+    const current_connection=useSelector(state=>state.connection);
+    const navigation = useNavigation();
 
 
-    const connectToWifi = () => {
+    //find password for provided ssid
+    const findPassword = (ssid) => {
+        let password = '';
+        devices.map((device) => {
+            if (device.SSID === ssid) {
+                password = device.password;
+            }
+        });
+        return password;
+    }
+
+    const connectToWifi = async(id) => {
         setWifiConnecting(true);
+        const pass= await findPassword(id);
         if (Platform.OS === 'android') {
-            WifiManager.connectToProtectedSSID(devices[0].SSID, devices[0].password, false)
+            WifiManager.connectToProtectedSSID(id, pass, false)
                 .then(wifi => {
                     setWifiConnecting(false);
                     setWifiConnected(true);
-                    setWifiStatus(wifi.status);
-                    console.log("connected", wifi)
+                    getWifiStatus()
+                    dispatch(currentConnection(id))
+
                 })
                 .catch(error => {
                     console.log(error);
                     setWifiConnecting(false);
                     setWifiConnected(false);
+                    getWifiStatus()
+
                 });
         }
         else {
-            WifiManager.connectToProtectedSSIDPrefix(devices[0].SSID, devices[0].password, false).then(wifi => {
+            WifiManager.connectToProtectedSSIDPrefix(id,pass, false).then(wifi => {
                 setWifiConnecting(false);
                 setWifiConnected(true);
-                setWifiStatus(wifi.status);
-                console.log("connected", wifi)
+                getWifiStatus()
+
             }
             ).catch(error => {
                 console.log(error);
                 setWifiConnecting(false);
                 setWifiConnected(false);
+                getWifiStatus()
+
             }
             );
         }
@@ -90,7 +120,7 @@ const Home = () => {
                 console.log("Your current connected wifi SSID is " + ssid);
                 setWifiConnected(true);
                 setWifiStatus("Connected to " + ssid);
-                setSsid(ssid);
+                setSsid(ssid);           
             },
             () => {
                 console.log("Cannot get current SSID!");
@@ -143,39 +173,52 @@ const Home = () => {
                             console.log('The permission is denied and not requestable anymore');
                             break;
                     }
-
                 })
                 .catch((error) => {
                     console.log("Permission error", error)
                 });
         }
-
-
     };
 
-    React.useEffect(() => {
-        console.log(devices)
+   useEffect(() => {
         getPermission()
+        const unsubscribe = NetInfo.addEventListener(state => {
+            console.log("Connection type", state);
+            console.log("Is connected?", state.isConnected);
+            setIsWifiEnabled(state.isWifiEnabled)
+          });
+          unsubscribe()
         if (permission === PermissionsAndroid.RESULTS.GRANTED || permission === RESULTS.GRANTED) {
             getWifiStatus();
-            console.log("Wifi List", deviceList);
         } else {
             console.log("Permission denied");
         }
-    }, [permission, wifiStatus]);
+        
+        if (!isWifiEnabled) {
+            WifiManager.setEnabled(true);
+        }
 
+    }, [permission, wifiStatus, isWifiEnabled]);
+
+    const disconnect = () => {
+        WifiManager.disconnect()
+            .then(wifi => {
+                console.log(wifi)
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    };
 
     return (
         <SafeAreaView style={styles.container}>
-            {ssid !== '' && <Card
-                name={ssid}
+           <Card
+                name={`${current_connection.wifi}`||"No Dandy connected"}
                 count={100}
-                onTap={() =>
-                    disconnectFromWifi(ssid)
-                }
-                onWHoleTap={() => console.log("Tapped")}
-                buttonText={"Disconnect"}
-            />}
+                onTap={() =>current_connection.wifi===ssid? disconnect():connectToWifi(current_connection.wifi)}
+                onWHoleTap={()=> navigation.navigate('Device')}
+                buttonText={current_connection.wifi===ssid?"Disconnect":"Connect"}
+            />
             <KeyboardAvoidingView
                 style={{ alignItems: 'center' }}
             >
@@ -184,22 +227,26 @@ const Home = () => {
                         buttonText={"Add Device"}
                         onTap={() => getDeviceList()}
                     />
+                    <ScrollView>
                     {deviceList.length > 0 ? deviceList.map((wifi, index) => {
                         console.log("mapped", wifi.SSID)
                         return (
                             <Card
                                 key={index}
                                 name={wifi.SSID}
-                                onTap={() => {
-                                    console.log("Tapped")
+                                onTap={
+                                   ()=>{
+                                       disconnect()
+                                        connectToWifi(wifi.SSID)
+                                    }
                                 }
-                                }
-                                onWHoleTap={() => console.log("Tapped")}
+                                onWHoleTap={()=> disconnect()}
                                 buttonText={wifi.SSID === ssid ? "Connected" : "Connect"}
                             />
                         )
                     }) : <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to connect</Text>
                     }
+                    </ScrollView>
                 </View>
             </KeyboardAvoidingView>
         </SafeAreaView>
