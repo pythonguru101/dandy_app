@@ -1,5 +1,5 @@
 import {
-  INCREMENT,CONNECTED_TO,WIFI_STATUS
+  INCREMENT,CONNECTED_TO,WIFI_STATUS, CONNECT_TO_WIFI
 } from '../ActionTypes';
 
 export const increment = (status) => {
@@ -22,3 +22,10 @@ export const currentConnection = (cname) => {
     payload: cname
   };
 };
+
+export const connectToWifi = (data) => {
+  return {
+    type: CONNECT_TO_WIFI,
+    payload: data
+  };
+}

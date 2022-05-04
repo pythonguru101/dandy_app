@@ -1,253 +1,282 @@
 import {
-    StyleSheet,
-    Text,
-    View,
-    Button,
-    TextInput,
-    PermissionsAndroid,
-    TouchableOpacity,
-    Modal,
-    Pressable,
-    KeyboardAvoidingView,
-    Platform,
-    SafeAreaView
-} from 'react-native'
-import React from 'react'
-import WifiManager from "react-native-wifi-reborn";
-import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
+  Text,
+  View,
+  PermissionsAndroid,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  Modal,
+  TextInput,
+  Pressable,
+} from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import WifiManager from 'react-native-wifi-reborn';
+import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import CircularButton from '../../components/CircularButton/CircularButton';
-import styles from './Style'
+import styles from './Style';
 import Card from '../../components/Card/Card';
+import devices from '../../data/devices';
+import {useDispatch, useSelector} from 'react-redux';
+import {currentConnection,connectToWifi} from '../../redux/Actions/index';
+import NetInfo from '@react-native-community/netinfo';
+import {useNavigation} from '@react-navigation/native';
+import {Formik} from 'formik';
 
 const Device = () => {
+  const [ssid, setSsid] = useState('');
+  const [wifiId, setWifiId] = useState('');
+  const [wifiPassword, setWifiPassword] = useState('');
+  const [deviceList, setWifiList] = useState([]);
+  const [wifiStatus, setWifiStatus] = useState('');
+  const [permission, setPermission] = useState('');
+  const [wifiConnected, setWifiConnected] = useState(false);
+  const [wifiConnecting, setWifiConnecting] = useState(false);
+  const [isWifiEnabled, setIsWifiEnabled] = useState(false);
+  const dispatch = useDispatch();
+  const current_connection = useSelector(state => state.connection);
+  const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
 
-    const [ssid, setSsid] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [deviceList, setWifiList] = React.useState([]);
-    const [wifiStatus, setWifiStatus] = React.useState('');
-    const [wifiConnected, setWifiConnected] = React.useState(false);
-    const [wifiConnecting, setWifiConnecting] = React.useState(false);
-    const [permission, setPermission] = React.useState('');
-    const [modalVisible, setModalVisible] = React.useState(false);
-    const [modalText, setModalText] = React.useState('');
+  //find password for provided ssid
+  const findPassword = ssid => {
+    let password = '';
+    devices.map(device => {
+      if (device.SSID === ssid) {
+        password = device.password;
+      }
+    });
+    return password;
+  };
 
-
-    const connectToWifi = () => {
-        setWifiConnecting(true);
-        WifiManager.connectToProtectedSSID(ssid, password, false)
-            .then(wifi => {
-                setWifiConnecting(false);
-                setWifiConnected(true);
-                setWifiStatus(wifi.status);
-                console.log("connected", wifi)
-            })
-            .catch(error => {
-                console.log(error);
-                setWifiConnecting(false);
-                setWifiConnected(false);
-            });
-    };
-
-    const disconnectFromWifi = (ssid) => {
-
-
-        // WifiManager.disconnectFromSSID(ssid)
-        //     .then(wifi => {
-        //         console.log(wifi)
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //     });
-    };
-
-    const getDeviceList = async () => {
-        await WifiManager.loadWifiList().then(wifiList => {
-            setWifiList(wifiList);
+  const connectToWifi = async id => {
+    setWifiConnecting(true);
+    const pass = await findPassword(id);
+    if (Platform.OS === 'android') {
+      WifiManager.connectToProtectedSSID(id, pass, false)
+        .then(wifi => {
+          setWifiConnecting(false);
+          setWifiConnected(true);
+          getWifiStatus();
+          dispatch(currentConnection(id));
+        })
+        .catch(error => {
+          console.log(error);
+          setWifiConnecting(false);
+          setWifiConnected(false);
+          getWifiStatus();
         });
+    } else {
+      WifiManager.connectToProtectedSSIDPrefix(id, pass, false)
+        .then(wifi => {
+          setWifiConnecting(false);
+          setWifiConnected(true);
+          getWifiStatus();
+        })
+        .catch(error => {
+          console.log(error);
+          setWifiConnecting(false);
+          setWifiConnected(false);
+          getWifiStatus();
+        });
+    }
+  };
 
-    };
+  const getDeviceList = async () => {
+    if (Platform.OS === 'android') {
+      await WifiManager.loadWifiList().then(wifiList => {
+        setWifiList(wifiList);
+      });
+    } else {
+      connectToWifi();
+    }
+  };
 
-    const getWifiStatus = () => {
-        WifiManager.getCurrentWifiSSID().then(
-            ssid => {
-                console.log("Your current connected wifi SSID is " + ssid);
-                setWifiConnected(true);
-                setWifiStatus("Connected to " + ssid);
-                setSsid(ssid);
-            },
-            () => {
-                console.log("Cannot get current SSID!");
-            }
+  const getWifiStatus = () => {
+    WifiManager.getCurrentWifiSSID().then(
+      ssid => {
+        console.log('Your current connected wifi SSID is ' + ssid);
+        setWifiConnected(true);
+        setWifiStatus('Connected to ' + ssid);
+        setSsid(ssid);
+      },
+      () => {
+        console.log('Cannot get current SSID!');
+      },
+    );
+  };
+  const getPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Location permission is required for WiFi connections',
+            message:
+              'This app needs location permission as this is required  ' +
+              'to scan for wifi networks.',
+            buttonNegative: 'DENY',
+            buttonPositive: 'ALLOW',
+          },
         );
-    };
-    const getPermission = async () => {
-        if (Platform.OS === 'android') {
-            try {
-                const granted = await PermissionsAndroid.request(
-                    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                    {
-                        title: 'Location permission is required for WiFi connections',
-                        message:
-                            'This app needs location permission as this is required  ' +
-                            'to scan for wifi networks.',
-                        buttonNegative: 'DENY',
-                        buttonPositive: 'ALLOW',
-                    },
-                );
 
-                setPermission(granted)
+        setPermission(granted);
+      } catch (err) {
+        console.warn(err);
+      }
+    } else {
+      request(PERMISSIONS.IOS.LOCATION_ALWAYS).then(result => {
+        setPermission(result);
+      });
+      check(PERMISSIONS.IOS.LOCATION_ALWAYS)
+        .then(result => {
+          switch (result) {
+            case RESULTS.UNAVAILABLE:
+              console.log(
+                'This feature is not available (on this device / in this context)',
+              );
+              break;
+            case RESULTS.DENIED:
+              console.log(
+                'The permission has not been requested / is denied but requestable',
+              );
+              break;
+            case RESULTS.LIMITED:
+              console.log(
+                'The permission is limited: some actions are possible',
+              );
+              break;
+            case RESULTS.GRANTED:
+              console.log('The permission is granted');
+              break;
+            case RESULTS.BLOCKED:
+              console.log(
+                'The permission is denied and not requestable anymore',
+              );
+              break;
+          }
+        })
+        .catch(error => {
+          console.log('Permission error', error);
+        });
+    }
+  };
 
-            }
-            catch (err) {
-                console.warn(err);
-            }
-        }
-        else {
-            request(PERMISSIONS.IOS.LOCATION_ALWAYS).then((result) => {
-                setPermission(result)
-
-            });
-            check(PERMISSIONS.IOS.LOCATION_ALWAYS)
-                .then((result) => {
-                    switch (result) {
-                        case RESULTS.UNAVAILABLE:
-                            console.log('This feature is not available (on this device / in this context)');
-                            break;
-                        case RESULTS.DENIED:
-                            console.log('The permission has not been requested / is denied but requestable');
-                            break;
-                        case RESULTS.LIMITED:
-                            console.log('The permission is limited: some actions are possible');
-                            break;
-                        case RESULTS.GRANTED:
-                            console.log('The permission is granted');
-                            break;
-                        case RESULTS.BLOCKED:
-                            console.log('The permission is denied and not requestable anymore');
-                            break;
-                    }
-
-                })
-                .catch((error) => {
-                    console.log("Permission error", error)
-                });
-        }
-
-
-    };
-
-
-
-
-
-    React.useEffect(() => {
-
-        getPermission()
-        if (permission === PermissionsAndroid.RESULTS.GRANTED || permission === RESULTS.GRANTED) {
-            getWifiStatus();
-            console.log("Wifi List", deviceList);
-        } else {
-            console.log("Permission denied");
-        }
-    }, [permission, wifiStatus]);
-
-    const onChangePassword = (text) => {
-        setPassword(text);
+  useEffect(() => {
+    getPermission();
+    const unsubscribe = NetInfo.addEventListener(state => {
+      console.log('Connection type', state);
+      console.log('Is connected?', state.isConnected);
+      setIsWifiEnabled(state.isWifiEnabled);
+    });
+    unsubscribe();
+    if (
+      permission === PermissionsAndroid.RESULTS.GRANTED ||
+      permission === RESULTS.GRANTED
+    ) {
+      getWifiStatus();
+    } else {
+      console.log('Permission denied');
     }
 
+    if (!isWifiEnabled) {
+      WifiManager.setEnabled(true);
+    }
+  }, [permission, wifiStatus, isWifiEnabled]);
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <Card
-                name={ssid}
-                count={100}
-                onTap={() => {
-                    console.log("Tapped")
-                }
-                }
-                onWHoleTap={() => console.log("Tapped")}
-                buttonText="Connect"
-            />
-            <KeyboardAvoidingView
-                style={{ alignItems: 'center' }}
-            >
+  const disconnect = () => {
+    WifiManager.disconnect()
+      .then(wifi => {
+        console.log(wifi);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
-                {/* <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                            Alert.alert("Modal has been closed.");
-                            setModalVisible(!modalVisible);
-                        }}
-                    >
-                        <View style={styles.centeredView}>
-                            <View style={styles.modalView}>
-                                <Text style={styles.modalText}>{modalText}</Text>
-                                <TextInput
-                                    style={styles.input}
-                                    onChangeText={onChangePassword}
-                                    value={password}
-                                    placeholder="password"
-                                    keyboardType="default"
-                                />
-                                <View style={{ flexDirection: "row", justifyContent: "space-between" }} >
-                                    <Pressable
-                                        style={[styles.button, styles.buttonConnect]}
-                                        onPress={() => connectToWifi()}
-                                    >
-                                        <Text style={styles.textStyle}>Connect</Text>
-                                    </Pressable>
-                                    <Pressable
-                                        style={[styles.button, styles.buttonCancel]}
-                                        onPress={() => setModalVisible(!modalVisible)}
-                                    >
-                                        <Text style={styles.textStyle}>Cancel</Text>
-                                    </Pressable>
-                                </View>
-                            </View>
-                        </View>
-                    </Modal> */}
+  const onChangePassword = password => {
+    setWifiPassword(password);
+  };
 
+  const onChangeSSID = ssid => {
+    setWifiId(ssid);
+  };
 
-                {/* <Text>Home</Text> */}
-                <View>
-                    <Text>Status: {wifiStatus || "No Dandy Bot Connected"}</Text>
+  return (
+    <SafeAreaView style={styles.container}>
+      <Card
+        name={`${current_connection.wifi}` || 'No Dandy connected'}
+        count={100}
+        onTap={() =>
+          current_connection.wifi === ssid
+            ? disconnect()
+            : connectToWifi(current_connection.wifi)
+        }
+        onWHoleTap={() => navigation.navigate('Device')}
+        buttonText={current_connection.wifi === ssid ? 'Disconnect' : 'Connect'}
+      />
+      <KeyboardAvoidingView style={{alignItems: 'center'}}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <Formik
+              initialValues={{wifiID: '', passPhrase: ''}}
+              onSubmit={values => dispatch(connectToWifi(values))}>
+              {({handleChange, handleBlur, handleSubmit, values}) => (
+                <View style={styles.modalView}>
+                  <Text style={styles.modalText}>Connect To Wifi</Text>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={handleChange('wifiID')}
+                    onBlur={handleBlur('wifiID')}
+                    value={values.wifiID}
+                    placeholder="SSID"
+                    keyboardType="default"
+                  />
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={handleChange('passPhrase')}
+                    onBlur={handleBlur('passPhrase')}
+                    value={values.passPhrase}
+                    placeholder="Password"
+                    keyboardType="default"
+                  />
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <Pressable
+                      style={[styles.button, styles.buttonConnect]}
+                      onPress={handleSubmit}>
+                      <Text style={styles.textStyle}>Connect</Text>
+                    </Pressable>
+                    <Pressable
+                      style={[styles.button, styles.buttonCancel]}
+                      onPress={() => setModalVisible(!modalVisible)}>
+                      <Text style={styles.textStyle}>Cancel</Text>
+                    </Pressable>
+                  </View>
                 </View>
-                {/* wifi list */}
+              )}
+            </Formik>
+          </View>
+        </Modal>
+        <View>
+          <CircularButton
+            buttonText={'Connect WiFi'}
+            onTap={() => setModalVisible(!modalVisible)}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+};
 
-                <View>
-                    <CircularButton
-                        buttonText={wifiConnected === true ? "Disonnect" : "Connect"}
-                        onTap={() => wifiConnected == true ? WifiManager.disconnect() : getDeviceList()}
-                    />
-
-                    <Text>Available Devices</Text>
-                    {deviceList.length > 0 ? deviceList.map((wifi, index) => {
-
-                        console.log("mapped", wifi.SSID)
-                        return (
-                            <TouchableOpacity key={index} onPress={() => {
-                                setModalVisible(true)
-                                setModalText(wifi.SSID)
-
-                            }}>
-                                <View style={{ flexDirection: "row", backgroundColor: "#B8FFF9" }} >
-                                    <Text>{index + 1}{". "}</Text>
-                                    <Text>{wifi.SSID}{"  "}</Text>
-                                    <Text>{wifi.BSSID}</Text>
-                                </View>
-                            </TouchableOpacity>
-                        )
-
-                    }) : <Text>No Devices found</Text>}
-                </View>
-
-            </KeyboardAvoidingView>
-
-        </SafeAreaView>
-    )
-}
-
-export default Device
-
+export default Device;
