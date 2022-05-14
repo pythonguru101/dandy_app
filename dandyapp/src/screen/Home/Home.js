@@ -7,15 +7,15 @@ import {
     SafeAreaView,
     ScrollView,
 } from 'react-native'
-import React,{useState,useEffect,useCallback} from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import WifiManager from "react-native-wifi-reborn";
 import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import CircularButton from '../../components/CircularButton/CircularButton';
 import styles from './Style'
 import Card from '../../components/Card/Card';
 import devices from '../../data/devices';
-import {useDispatch,useSelector} from 'react-redux';
-import {currentConnection}from '../../redux/Actions/index'
+import { useDispatch, useSelector } from 'react-redux';
+import { currentConnection } from '../../redux/Actions/index'
 import NetInfo from "@react-native-community/netinfo";
 import { useNavigation } from '@react-navigation/native';
 
@@ -27,11 +27,11 @@ const Home = () => {
     const [deviceList, setWifiList] = useState([]);
     const [wifiStatus, setWifiStatus] = useState('');
     const [permission, setPermission] = useState('');
-    const [wifiConnected,setWifiConnected] = useState(false);
-    const [wifiConnecting,setWifiConnecting] = useState(false);
-    const [isWifiEnabled,setIsWifiEnabled] = useState(false);
-    const dispatch= useDispatch();
-    const current_connection=useSelector(state=>state.connection);
+    const [wifiConnected, setWifiConnected] = useState(false);
+    const [wifiConnecting, setWifiConnecting] = useState(false);
+    const [isWifiEnabled, setIsWifiEnabled] = useState(false);
+    const dispatch = useDispatch();
+    const current_connection = useSelector(state => state.connection);
     const navigation = useNavigation();
 
 
@@ -46,9 +46,9 @@ const Home = () => {
         return password;
     }
 
-    const connectToWifi = async(id) => {
+    const connectToWifi = async (id) => {
         setWifiConnecting(true);
-        const pass= await findPassword(id);
+        const pass = await findPassword(id);
         if (Platform.OS === 'android') {
             WifiManager.connectToProtectedSSID(id, pass, false)
                 .then(wifi => {
@@ -67,7 +67,7 @@ const Home = () => {
                 });
         }
         else {
-            WifiManager.connectToProtectedSSIDPrefix(id,pass, false).then(wifi => {
+            WifiManager.connectToProtectedSSIDPrefix(id, pass, false).then(wifi => {
                 setWifiConnecting(false);
                 setWifiConnected(true);
                 getWifiStatus()
@@ -120,7 +120,7 @@ const Home = () => {
                 console.log("Your current connected wifi SSID is " + ssid);
                 setWifiConnected(true);
                 setWifiStatus("Connected to " + ssid);
-                setSsid(ssid);           
+                setSsid(ssid);
             },
             () => {
                 console.log("Cannot get current SSID!");
@@ -180,20 +180,20 @@ const Home = () => {
         }
     };
 
-   useEffect(() => {
+    useEffect(() => {
         getPermission()
         const unsubscribe = NetInfo.addEventListener(state => {
             console.log("Connection type", state);
             console.log("Is connected?", state.isConnected);
             setIsWifiEnabled(state.isWifiEnabled)
-          });
-          unsubscribe()
+        });
+        unsubscribe()
         if (permission === PermissionsAndroid.RESULTS.GRANTED || permission === RESULTS.GRANTED) {
             getWifiStatus();
         } else {
             console.log("Permission denied");
         }
-        
+
         if (!isWifiEnabled) {
             WifiManager.setEnabled(true);
         }
@@ -212,12 +212,13 @@ const Home = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-           <Card
-                name={`${current_connection.wifi}`||"No Dandy connected"}
-                count={100}
-                onTap={() =>current_connection.wifi===ssid? disconnect():connectToWifi(current_connection.wifi)}
-                onWHoleTap={()=> navigation.navigate('Device')}
-                buttonText={current_connection.wifi===ssid?"Disconnect":"Connect"}
+            <Card
+                name={`${current_connection.wifi}`.includes("DANDY")?`${current_connection.wifi}` : "No Dandy connected"}
+                count={current_connection.wifi === ssid ? 100 : "N/A"}
+                onTap={() => current_connection.wifi === ssid ? disconnect() : connectToWifi(current_connection.wifi)}
+                onWHoleTap={() => navigation.navigate('Devices')}
+                buttonText={current_connection.wifi === ssid ? "Disconnect" : "Connect"}
+              
             />
             <KeyboardAvoidingView
                 style={{ alignItems: 'center' }}
@@ -228,24 +229,29 @@ const Home = () => {
                         onTap={() => getDeviceList()}
                     />
                     <ScrollView>
-                    {deviceList.length > 0 ? deviceList.map((wifi, index) => {
-                        console.log("mapped", wifi.SSID)
-                        return (
-                            <Card
-                                key={index}
-                                name={wifi.SSID}
-                                onTap={
-                                   ()=>{
-                                       disconnect()
-                                        connectToWifi(wifi.SSID)
-                                    }
-                                }
-                                onWHoleTap={()=> disconnect()}
-                                buttonText={wifi.SSID === ssid ? "Connected" : "Connect"}
-                            />
-                        )
-                    }) : <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to connect</Text>
-                    }
+                        {deviceList.length > 0 ? deviceList.map((wifi, index) => {
+                            console.log("mapped", wifi.SSID.includes("DANDY_MARK1"))
+                            if(wifi.SSID.includes("DANDY")){
+                                return (
+                                    <Card
+                                        key={index}
+                                        name={wifi.SSID}
+                                        onTap={
+                                            () => {
+                                                disconnect()
+                                                connectToWifi(wifi.SSID)
+                                            }
+                                        }
+                                        onWHoleTap={() => disconnect()}
+                                        buttonText={wifi.SSID === ssid ? "Connected" : "Connect"}
+                                    />
+                                )
+                            }
+                            else{
+                                return null
+                            }
+                        }) : <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to connect</Text>
+                        }
                     </ScrollView>
                 </View>
             </KeyboardAvoidingView>

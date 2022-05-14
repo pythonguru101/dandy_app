@@ -6,7 +6,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './src/redux/store'
+import { enableLatestRenderer } from 'react-native-maps';
 
+enableLatestRenderer();
 
 
 function App() {

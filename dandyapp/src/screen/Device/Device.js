@@ -9,8 +9,10 @@ import {
   Modal,
   TextInput,
   Pressable,
+  TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect} from 'react';
 import WifiManager from 'react-native-wifi-reborn';
 import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import CircularButton from '../../components/CircularButton/CircularButton';
@@ -18,7 +20,7 @@ import styles from './Style';
 import Card from '../../components/Card/Card';
 import devices from '../../data/devices';
 import {useDispatch, useSelector} from 'react-redux';
-import {currentConnection,connectToWifi} from '../../redux/Actions/index';
+import {currentConnection, connectToWifi} from '../../redux/Actions/index';
 import NetInfo from '@react-native-community/netinfo';
 import {useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
@@ -38,7 +40,6 @@ const Device = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
 
-  //find password for provided ssid
   const findPassword = ssid => {
     let password = '';
     devices.map(device => {
@@ -79,16 +80,6 @@ const Device = () => {
           setWifiConnected(false);
           getWifiStatus();
         });
-    }
-  };
-
-  const getDeviceList = async () => {
-    if (Platform.OS === 'android') {
-      await WifiManager.loadWifiList().then(wifiList => {
-        setWifiList(wifiList);
-      });
-    } else {
-      connectToWifi();
     }
   };
 
@@ -205,7 +196,11 @@ const Device = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Card
-        name={`${current_connection.wifi}` || 'No Dandy connected'}
+        name={
+          `${current_connection.wifi}`.includes('DANDY')
+            ? `${current_connection.wifi}`
+            : 'No Dandy connected'
+        }
         count={100}
         onTap={() =>
           current_connection.wifi === ssid
@@ -227,7 +222,19 @@ const Device = () => {
           <View style={styles.centeredView}>
             <Formik
               initialValues={{wifiID: '', passPhrase: ''}}
-              onSubmit={values => dispatch(connectToWifi(values))}>
+              onSubmit={values => {
+                ToastAndroid.show(
+                  `Connecting to${values.wifiID}`,
+                  ToastAndroid.SHORT,
+                );
+                setTimeout(() => {
+                  ToastAndroid.show(
+                    `Connected to${values.wifiID}`,
+                    ToastAndroid.LONG,
+                  );
+                  setModalVisible(!modalVisible);
+                }, 1000);
+              }}>
               {({handleChange, handleBlur, handleSubmit, values}) => (
                 <View style={styles.modalView}>
                   <Text style={styles.modalText}>Connect To Wifi</Text>
@@ -241,6 +248,7 @@ const Device = () => {
                   />
                   <TextInput
                     style={styles.input}
+                    secureTextEntry={true}
                     onChangeText={handleChange('passPhrase')}
                     onBlur={handleBlur('passPhrase')}
                     value={values.passPhrase}
@@ -273,6 +281,11 @@ const Device = () => {
             buttonText={'Connect WiFi'}
             onTap={() => setModalVisible(!modalVisible)}
           />
+        </View>
+        <View>
+          <TouchableOpacity onPress={() => navigation.navigate('AreaSelector')}>
+            <Text style={styles.textStyle}>AreaSelector</Text>
+          </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

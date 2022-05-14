@@ -83,6 +83,7 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
         paddingLeft: 10,
         paddingRight: 10,
+        color:"black"
     },
 
 })

@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 
-const Card = ({ name, count, buttonText, onTap, onWHoleTap }) => {
+const Card = ({ name, count, buttonText, onTap, onWHoleTap,status }) => {
 
     return (
         <View>
             <TouchableOpacity style={styles.card} onPress={onWHoleTap}>
                 <Image style={styles.image} source={{ uri: "https://img.icons8.com/stickers/100/000000/robot.png" }} />
                 <View style={styles.cardContent}>
-                    <Text style={styles.name}>{name}</Text>
+                    <Text style={styles.name}>{name}{" "} <Text style={status=="online"?styles.online:styles.offline} >{status}</Text> </Text>
                     {count && <Text style={styles.count}>Battery:{count}%</Text>}
                     <TouchableOpacity style={styles.disconnectButton} onPress={onTap}>
                         <Text style={styles.followButtonText}>{buttonText}</Text>
@@ -90,4 +90,12 @@ const styles = StyleSheet.create({
         color: "#000",
         fontSize: 12,
     },
+    online:{
+        fontSize: 12,
+        color:"green",
+    },
+    offline:{
+        fontSize: 12,
+        color:"red",
+    }
 })

@@ -1,5 +1,5 @@
 import {
-  INCREMENT,CONNECTED_TO,WIFI_STATUS, CONNECT_TO_WIFI
+  INCREMENT,CONNECTED_TO,WIFI_STATUS, CONNECT_TO_WIFI,SAVE_FENCING
 } from '../ActionTypes';
 
 export const increment = (status) => {
@@ -29,3 +29,12 @@ export const connectToWifi = (data) => {
     payload: data
   };
 }
+
+export const saveFencing = (data) => {
+  return {
+    type: SAVE_FENCING,
+    payload: data
+  }
+}
+
+
