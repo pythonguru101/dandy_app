@@ -12,18 +12,19 @@ import {
   TouchableOpacity,
   ToastAndroid,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import WifiManager from 'react-native-wifi-reborn';
-import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import CircularButton from '../../components/CircularButton/CircularButton';
 import styles from './Style';
 import Card from '../../components/Card/Card';
 import devices from '../../data/devices';
-import {useDispatch, useSelector} from 'react-redux';
-import {currentConnection, connectToWifi} from '../../redux/Actions/index';
+import { useDispatch, useSelector } from 'react-redux';
+import { currentConnection, connectToWifi } from '../../redux/Actions/index';
 import NetInfo from '@react-native-community/netinfo';
-import {useNavigation} from '@react-navigation/native';
-import {Formik} from 'formik';
+import { useNavigation } from '@react-navigation/native';
+import { Formik } from 'formik';
+import Map from '../../components/Map/Map';
 
 const Device = () => {
   const [ssid, setSsid] = useState('');
@@ -210,7 +211,7 @@ const Device = () => {
         onWHoleTap={() => navigation.navigate('Device')}
         buttonText={current_connection.wifi === ssid ? 'Disconnect' : 'Connect'}
       />
-      <KeyboardAvoidingView style={{alignItems: 'center'}}>
+      <KeyboardAvoidingView style={{ alignItems: 'center' }}>
         <Modal
           animationType="slide"
           transparent={true}
@@ -221,7 +222,7 @@ const Device = () => {
           }}>
           <View style={styles.centeredView}>
             <Formik
-              initialValues={{wifiID: '', passPhrase: ''}}
+              initialValues={{ wifiID: '', passPhrase: '' }}
               onSubmit={values => {
                 ToastAndroid.show(
                   `Connecting to${values.wifiID}`,
@@ -235,7 +236,7 @@ const Device = () => {
                   setModalVisible(!modalVisible);
                 }, 1000);
               }}>
-              {({handleChange, handleBlur, handleSubmit, values}) => (
+              {({ handleChange, handleBlur, handleSubmit, values }) => (
                 <View style={styles.modalView}>
                   <Text style={styles.modalText}>Connect To Wifi</Text>
                   <TextInput

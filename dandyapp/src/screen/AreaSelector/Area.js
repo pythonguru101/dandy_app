@@ -8,21 +8,21 @@ import {
   Platform,
   Image,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import MapView, {
   MAP_TYPES,
   Polygon,
   PROVIDER_GOOGLE,
   Marker,
 } from 'react-native-maps';
-import marker from '../../assets/marker.png';
+import marker from '../../assets/marker_blue.png';
 import updateLocation from '../../assets/location_update.png';
 import Geolocation from 'react-native-geolocation-service';
-import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import {useDispatch} from 'react-redux';
-import {saveFencing} from '../../redux/Actions';
+import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { useDispatch } from 'react-redux';
+import { saveFencing } from '../../redux/Actions';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0012;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
@@ -119,7 +119,7 @@ const Area = () => {
         // See error code charts below.
         console.log(error.code, error.message);
       },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
   };
 
@@ -238,7 +238,7 @@ const Area = () => {
             coordinates={polygon.coordinates}
             holes={polygon.holes}
             strokeColor="#F00"
-            fillColor="rgba(255,0,0,0.5)"
+            fillColor="rgba(0,0,255,0.5)"
             strokeWidth={1}
           />
         ))}
@@ -249,7 +249,7 @@ const Area = () => {
             coordinates={editing.coordinates}
             holes={editing.holes}
             strokeColor="#F00"
-            fillColor="rgba(255,0,0,0.5)"
+            fillColor="rgba(0,0,255,0.5)"
             strokeWidth={1}
           />
         )}
@@ -274,7 +274,7 @@ const Area = () => {
         <TouchableOpacity
           onPress={() => getCurrentLocation()}
           style={[styles.bubbleC, styles.buttonC]}>
-          <Image source={updateLocation} style={{width: 30, height: 30}} />
+          <Image source={updateLocation} style={{ width: 30, height: 30 }} />
         </TouchableOpacity>
       </View>
     </View>

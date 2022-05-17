@@ -7,6 +7,7 @@ import Settings from '../screen/Settings/Settings'
 import Device from '../screen/Device/Device'
 import Area from '../screen/AreaSelector/Area';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Map from '../components/Map/Map';
 
 
 
@@ -64,6 +65,11 @@ export default function App() {
                         <Icon name="cog" size={24} color={tintColor} />)
                 }}
             />
+            <Drawer.Screen name="Map" component={Map} options={{
+                title: 'Map',
+                drawerIcon: ({ tintColor }) => (
+                    <Icon name="map-marked-alt" size={24} color={tintColor} />)
+            }} />
         </Drawer.Navigator>
 
     );
