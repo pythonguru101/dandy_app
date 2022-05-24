@@ -8,7 +8,7 @@ import Device from '../screen/Device/Device'
 import Area from '../screen/AreaSelector/Area';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Map from '../components/Map/Map';
-
+import HeatMap from '../screen/HeatMap/HeatMap';
 
 
 
@@ -70,6 +70,12 @@ export default function App() {
                 drawerIcon: ({ tintColor }) => (
                     <Icon name="map-marked-alt" size={24} color={tintColor} />)
             }} />
+            <Drawer.Screen name="HeatMap" component={HeatMap} options={{
+                title: 'Heat Map',
+                drawerIcon: ({ tintColor }) => (
+                    <Icon name="fire" size={24} color={tintColor} />)
+            }} />
+ 
         </Drawer.Navigator>
 
     );
