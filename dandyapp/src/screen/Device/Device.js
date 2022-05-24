@@ -24,7 +24,8 @@ import { currentConnection, connectToWifi } from '../../redux/Actions/index';
 import NetInfo from '@react-native-community/netinfo';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
-import Map from '../../components/Map/Map';
+import axios from 'axios';
+
 
 const Device = () => {
   const [ssid, setSsid] = useState('');
@@ -194,6 +195,13 @@ const Device = () => {
     setWifiId(ssid);
   };
 
+
+  const onSubmitFunction = async (values) => {
+    axios.post('api/wifi/set', { values }).then(res => console.log("API RES", res));
+
+  };
+
+
   return (
     <SafeAreaView style={styles.container}>
       <Card
@@ -224,6 +232,7 @@ const Device = () => {
             <Formik
               initialValues={{ wifiID: '', passPhrase: '' }}
               onSubmit={values => {
+                onSubmitFunction(values);
                 ToastAndroid.show(
                   `Connecting to${values.wifiID}`,
                   ToastAndroid.SHORT,

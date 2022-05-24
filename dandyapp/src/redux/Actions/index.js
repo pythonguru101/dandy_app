@@ -1,6 +1,7 @@
 import {
-  INCREMENT,CONNECTED_TO,WIFI_STATUS, CONNECT_TO_WIFI,SAVE_FENCING
+  INCREMENT, CONNECTED_TO, WIFI_STATUS, CONNECT_TO_WIFI, SAVE_FENCING, GET_ROBOT_LOCATION
 } from '../ActionTypes';
+import axios from 'axios';
 
 export const increment = (status) => {
   return {
@@ -9,7 +10,7 @@ export const increment = (status) => {
   };
 };
 
-export const connectedTo =(ssid)=>{
+export const connectedTo = (ssid) => {
   return {
     type: CONNECTED_TO,
     payload: ssid
@@ -37,4 +38,40 @@ export const saveFencing = (data) => {
   }
 }
 
+
+export function setRobotData(data) {
+
+  return {
+
+    type: GET_ROBOT_LOCATION,
+
+    payload: data,
+
+  };
+
+}
+
+export function getRobotData() {
+
+  return async (dispatch) => {
+
+    try {
+
+      const apiReq = await axios.get("api/robot/location")
+
+      console.log(apiReq);
+
+      await dispatch(setRobotData(apiReq));
+
+      return apiReq || [];
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  };
+
+}
 
