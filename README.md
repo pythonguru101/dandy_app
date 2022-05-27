@@ -82,7 +82,7 @@ Linux Only supports Android Development.
 Follow the [installation instructions](https://nodejs.org/en/download/package-manager/) for your Linux distribution to install Node 14 or newer.
 ####Java Development Kit
 
-React Native requires at least the version 8 of the Java SE Development Kit (JDK). You may download and install OpenJDK from [AdoptOpenJDK](https://adoptopenjdk.net/) or your system packager. You may also [Download and install Oracle JDK 14](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html) if you want.
+React Native requires at least the version 8 of the Java SE Development Kit (JDK). You may download and install OpenJDK from [AdoptOpenJDK](https://adoptopenjdk.net/) or your system packager. You may also [Download and install Oracle JDK 14](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html) if you want. Or you can install it by using this command `sudo apt-get install openjdk-11-jdk`
 
 ##### Android development environment
 
