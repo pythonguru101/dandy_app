@@ -7,6 +7,7 @@ import {
   PermissionsAndroid,
   Platform,
   Image,
+  ToastAndroid
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import MapView, {
@@ -21,6 +22,7 @@ import Geolocation from 'react-native-geolocation-service';
 import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { useDispatch } from 'react-redux';
 import { saveFencing } from '../../redux/Actions';
+import { setFencingCoords } from '../../services/services';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -142,6 +144,10 @@ const Area = () => {
     setCreatingHole(false);
     console.log('info', polygons, editing, creatingHole);
     dispatch(saveFencing(editing));
+    setFencingCoords(editing)
+      .then(res => { ToastAndroid.show('Fencing coordinates saved', ToastAndroid.LONG) })
+      .catch(err => { ToastAndroid.show('Fencing coordinates not saved', ToastAndroid.LONG) });
+
   };
   // cancel editing polygon
   const clear = () => {

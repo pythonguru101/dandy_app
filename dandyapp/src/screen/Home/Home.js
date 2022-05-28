@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { currentConnection } from '../../redux/Actions/index'
 import NetInfo from "@react-native-community/netinfo";
 import { useNavigation } from '@react-navigation/native';
+import { getRobotData } from '../../redux/Actions/index';
 
 
 
@@ -32,6 +33,8 @@ const Home = () => {
     const [isWifiEnabled, setIsWifiEnabled] = useState(false);
     const dispatch = useDispatch();
     const current_connection = useSelector(state => state.connection);
+    const robotInfo = useSelector(state => state.connection);
+
     const navigation = useNavigation();
 
 
@@ -181,6 +184,7 @@ const Home = () => {
     };
 
     useEffect(() => {
+        dispatch(getRobotData())
         getPermission()
         const unsubscribe = NetInfo.addEventListener(state => {
             console.log("Connection type", state);
@@ -213,12 +217,12 @@ const Home = () => {
     return (
         <SafeAreaView style={styles.container}>
             <Card
-                name={`${current_connection.wifi}`.includes("DANDY")?`${current_connection.wifi}` : "No Dandy connected"}
+                name={`${current_connection.wifi}`.includes("DANDY") ? `${current_connection.wifi}` : "No Dandy connected"}
                 count={current_connection.wifi === ssid ? 100 : "N/A"}
                 onTap={() => current_connection.wifi === ssid ? disconnect() : connectToWifi(current_connection.wifi)}
                 onWHoleTap={() => navigation.navigate('Devices')}
                 buttonText={current_connection.wifi === ssid ? "Disconnect" : "Connect"}
-              
+
             />
             <KeyboardAvoidingView
                 style={{ alignItems: 'center' }}
@@ -231,7 +235,7 @@ const Home = () => {
                     <ScrollView>
                         {deviceList.length > 0 ? deviceList.map((wifi, index) => {
                             console.log("mapped", wifi.SSID.includes("DANDY_MARK1"))
-                            if(wifi.SSID.includes("DANDY")){
+                            if (wifi.SSID.includes("DANDY")) {
                                 return (
                                     <Card
                                         key={index}
@@ -247,7 +251,7 @@ const Home = () => {
                                     />
                                 )
                             }
-                            else{
+                            else {
                                 return null
                             }
                         }) : <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to connect</Text>

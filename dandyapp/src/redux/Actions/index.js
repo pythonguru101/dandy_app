@@ -2,6 +2,7 @@ import {
   INCREMENT, CONNECTED_TO, WIFI_STATUS, CONNECT_TO_WIFI, SAVE_FENCING, GET_ROBOT_LOCATION
 } from '../ActionTypes';
 import axios from 'axios';
+import { getdeviceslocation } from '../../services/services'
 
 export const increment = (status) => {
   return {
@@ -52,26 +53,16 @@ export function setRobotData(data) {
 }
 
 export function getRobotData() {
-
   return async (dispatch) => {
-
     try {
-
-      const apiReq = await axios.get("api/robot/location")
-
-      console.log(apiReq);
+      const apiReq = (await getdeviceslocation()).data
 
       await dispatch(setRobotData(apiReq));
-
       return apiReq || [];
-
     } catch (error) {
-
       console.error(error);
-
     }
-
   };
-
 }
+
 

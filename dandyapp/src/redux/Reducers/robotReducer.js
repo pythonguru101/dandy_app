@@ -7,7 +7,7 @@ const initialState = {
     error: null,
 };
 
-const FencingReducer = (state = initialState, action) => {
+const RobotReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_ROBOT_LOCATION:
             return {
@@ -34,4 +34,4 @@ const FencingReducer = (state = initialState, action) => {
             return state;
     }
 }
-export default FencingReducer;
+export default RobotReducer;

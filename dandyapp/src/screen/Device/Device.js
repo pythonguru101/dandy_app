@@ -20,12 +20,12 @@ import styles from './Style';
 import Card from '../../components/Card/Card';
 import devices from '../../data/devices';
 import { useDispatch, useSelector } from 'react-redux';
-import { currentConnection, connectToWifi } from '../../redux/Actions/index';
+import { currentConnection, connectToWifi, getRobotData } from '../../redux/Actions/index';
 import NetInfo from '@react-native-community/netinfo';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import axios from 'axios';
-
+import { setWifiCreds } from '../../services/services'
 
 const Device = () => {
   const [ssid, setSsid] = useState('');
@@ -41,6 +41,8 @@ const Device = () => {
   const current_connection = useSelector(state => state.connection);
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const robotInfo = useSelector(state => state.robot);
+
 
   const findPassword = ssid => {
     let password = '';
@@ -156,6 +158,7 @@ const Device = () => {
   };
 
   useEffect(() => {
+    dispatch(getRobotData())
     getPermission();
     const unsubscribe = NetInfo.addEventListener(state => {
       console.log('Connection type', state);
@@ -197,7 +200,19 @@ const Device = () => {
 
 
   const onSubmitFunction = async (values) => {
-    axios.post('api/wifi/set', { values }).then(res => console.log("API RES", res));
+    console.log("Values", values)
+    setWifiCreds(values).then(res => {
+      console.log("Response", res)
+      if (res.status === 200) {
+        navigation.navigate('Home');
+      }
+    }
+    ).catch(err => {
+      console.log("Error", err)
+    }
+    )
+
+
 
   };
 
@@ -230,16 +245,16 @@ const Device = () => {
           }}>
           <View style={styles.centeredView}>
             <Formik
-              initialValues={{ wifiID: '', passPhrase: '' }}
+              initialValues={{ ssid: '', password: '' }}
               onSubmit={values => {
                 onSubmitFunction(values);
                 ToastAndroid.show(
-                  `Connecting to${values.wifiID}`,
+                  `Connecting to${values.ssid}`,
                   ToastAndroid.SHORT,
                 );
                 setTimeout(() => {
                   ToastAndroid.show(
-                    `Connected to${values.wifiID}`,
+                    `Connected to${values.ssid}`,
                     ToastAndroid.LONG,
                   );
                   setModalVisible(!modalVisible);
@@ -250,18 +265,18 @@ const Device = () => {
                   <Text style={styles.modalText}>Connect To Wifi</Text>
                   <TextInput
                     style={styles.input}
-                    onChangeText={handleChange('wifiID')}
-                    onBlur={handleBlur('wifiID')}
-                    value={values.wifiID}
+                    onChangeText={handleChange('ssid')}
+                    onBlur={handleBlur('ssid')}
+                    value={values.ssid}
                     placeholder="SSID"
                     keyboardType="default"
                   />
                   <TextInput
                     style={styles.input}
                     secureTextEntry={true}
-                    onChangeText={handleChange('passPhrase')}
-                    onBlur={handleBlur('passPhrase')}
-                    value={values.passPhrase}
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
+                    value={values.password}
                     placeholder="Password"
                     keyboardType="default"
                   />
