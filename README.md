@@ -20,10 +20,11 @@ First you need to navigate to the dandyapp directory. You can do it by `cd dandy
 
 If your environment is not configured please follow the Setup environment section below. 
 
-1. Open your terminal on the project directory
+1. Open your terminal on the project directory "dandyapp"
 2. run the command `npm install`
 3. After succesfully finising installing npm run this command for run the project on Android `npx react-native run-android` or `npx react-native run-ios` for iOS
-4. If you dont have any emulator or mobile device connected please make sure to have either of these befor running the project
+4. You need to start the metro server first before running the app. To run the metro run this command `npx react-native start` .
+5. If you dont have any emulator or mobile device connected please make sure to have either of these befor running the project
 
 # Web App
 
@@ -81,7 +82,7 @@ Linux Only supports Android Development.
 Follow the [installation instructions](https://nodejs.org/en/download/package-manager/) for your Linux distribution to install Node 14 or newer.
 ####Java Development Kit
 
-React Native requires at least the version 8 of the Java SE Development Kit (JDK). You may download and install OpenJDK from [AdoptOpenJDK](https://adoptopenjdk.net/) or your system packager. You may also [Download and install Oracle JDK 14](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html) if you want.
+React Native requires at least the version 8 of the Java SE Development Kit (JDK). You may download and install OpenJDK from [AdoptOpenJDK](https://adoptopenjdk.net/) or your system packager. You may also [Download and install Oracle JDK 14](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html) if you want. Or you can install it by using this command `sudo apt-get install openjdk-11-jdk`
 
 ##### Android development environment
 
@@ -115,7 +116,7 @@ Finally, click "Apply" to download and install the Android SDK and related build
 
 The React Native tools require some environment variables to be set up in order to build apps with native code.
 
-Add the following lines to your $HOME/.bash_profile or $HOME/.bashrc (if you are using zsh then ~/.zprofile or ~/.zshrc) config file:
+Add the following lines to your $HOME/.bash_profile or $HOME/.bashrc (if you are using zsh then ~/.zprofile or ~/.zshrc) config file, You just need to run these in your terminal:
 
 `export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk`
 `export PATH=$PATH:$ANDROID_SDK_ROOT/emulator`
@@ -124,6 +125,8 @@ Add the following lines to your $HOME/.bash_profile or $HOME/.bashrc (if you are
     .bash_profile is specific to bash. If you're using another shell, you will need to edit the appropriate shell-specific config file.
 
 Type source $HOME/.bash_profile for bash or source $HOME/.zprofile to load the config into your current shell. Verify that ANDROID_SDK_ROOT has been set by running echo $ANDROID_SDK_ROOT and the appropriate directories have been added to your path by running echo $PATH.
+
+4. You need to install "adb" on your system. To install it you need run `sudo apt install adb` 
 
 ### For Windows
 
