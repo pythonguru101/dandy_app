@@ -207,3 +207,8 @@ The default location for this folder is:
 ```
 
 
+# Set Emulator port to your backend port
+
+To use API from localhost you need to change the emulator `tcp` as same as your local backends port 
+
+adb -s emulator-5554 reverse tcp:5000 tcp:5000
