@@ -235,7 +235,7 @@ const Home = () => {
                     <ScrollView>
                         {deviceList.length > 0 ? deviceList.map((wifi, index) => {
                             console.log("mapped", wifi.SSID.includes("DANDY_MARK1"))
-                            if (wifi.SSID.includes("DANDY")) {
+                            if (wifi.SSID.includes("dandy")) {
                                 return (
                                     <Card
                                         key={index}
