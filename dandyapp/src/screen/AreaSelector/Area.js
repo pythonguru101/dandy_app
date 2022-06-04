@@ -17,17 +17,21 @@ import MapView, {
   Marker,
 } from 'react-native-maps';
 import marker from '../../assets/marker_blue.png';
+import robot from '../../assets/robot.png'
+import ball from '../../assets/ball.png'
 import updateLocation from '../../assets/location_update.png';
 import Geolocation from 'react-native-geolocation-service';
 import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { saveFencing } from '../../redux/Actions';
 import { setFencingCoords } from '../../services/services';
+import ViewShot,{captureScreen} from "react-native-view-shot";
+import RNFS from 'react-native-fs';
+
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0012;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const LATITUDE_DELTA = 0.0022;
 let id = 0;
 const initialPosition = {
   coords: {
@@ -43,15 +47,19 @@ const initialPosition = {
   provider: 'fused',
   timestamp: 1651872653900,
 };
-
+const path = `/storage/emulated/0/Android/data/com.dandyapp/cache` + `/${(Math.floor(Math.random() * 999999) + 1).toString()}.json`;
 const Area = () => {
   const [polygons, setPolygons] = useState([]);
   const [editing, setEditing] = useState(null);
+  const [latitudeDelta,setLatitudeDelta] = useState(LATITUDE_DELTA);
+  const [longitudeDelta,setLongitudeDelta] = useState(latitudeDelta*ASPECT_RATIO);
+  const [lat,setLat]=useState(initialPosition.coords.latitude);
+  const [lng,setLng]=useState(initialPosition.coords.longitude);
   const [creatingHole, setCreatingHole] = useState(false);
   const [permission, setPermission] = useState('');
   const [coordinates, setCoordinates] = useState(initialPosition);
   const dispatch = useDispatch();
-
+  const fencing = useSelector(state => state.fencing);
   //getting permission if no yet got
   const getPermission = async () => {
     if (Platform.OS === 'android') {
@@ -114,8 +122,8 @@ const Area = () => {
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
-        console.log(position);
-        setCoordinates(position);
+        setLat(position.coords.latitude);
+        setLng(position.coords.longitude);
       },
       error => {
         // See error code charts below.
@@ -135,7 +143,7 @@ const Area = () => {
       //Getting location
       getCurrentLocation();
     }
-  }, [permission]);
+  }, [permission,fencing]);
 
   // finish editing polygon
   const finish = () => {
@@ -143,10 +151,32 @@ const Area = () => {
     setEditing(null);
     setCreatingHole(false);
     console.log('info', polygons, editing, creatingHole);
-    dispatch(saveFencing(editing));
     setFencingCoords(editing)
       .then(res => { ToastAndroid.show('Fencing coordinates saved', ToastAndroid.LONG) })
       .catch(err => { ToastAndroid.show('Fencing coordinates not saved', ToastAndroid.LONG) });
+
+      captureScreen({
+        format: "jpg",
+        quality: 0.8
+      }).then(
+        uri => {
+        console.log("Image saved to", uri)
+        let data= editing
+        editing.image=uri
+        editing.date= new Date().toDateString()
+        console.log("Saving object",data)
+       dispatch(saveFencing(data));
+      },
+    
+        error => console.error("Oops, snapshot failed", error)
+      );
+
+  RNFS.writeFile(path, JSON.stringify(editing), 'utf8').
+  then(success => {
+    console.log('File written successfully!', path);
+  }).catch(err => {
+    console.log('Error writing file', err);
+  });
 
   };
   // cancel editing polygon
@@ -178,6 +208,7 @@ const Area = () => {
   };
   // add point to polygon
   const onPress = e => {
+    console.log("onpress functions",e)
     if (!editing) {
       setEditing({
         id: id++,
@@ -208,10 +239,11 @@ const Area = () => {
   const mapOptions = {
     scrollEnabled: true,
   };
-
   if (editing) {
-    mapOptions.scrollEnabled = false;
+    mapOptions.scrollEnabled = true;
     mapOptions.onPanDrag = e => onPress(e);
+    mapOptions.zoomEnabled = true; 
+  
   }
 
   return (
@@ -221,12 +253,21 @@ const Area = () => {
         style={styles.map}
         mapType={MAP_TYPES.SATELLITE}
         maxZoomLevel={20}
+        zoomEnabled={true}
+        zoomControlEnabled={true}
+        zoomTapEnabled={true}
         onPress={e => onPress(e)}
         region={{
-          latitude: coordinates.coords.latitude,
-          longitude: coordinates.coords.longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
+          latitude: lat,
+          longitude: lng,
+          latitudeDelta: latitudeDelta,
+          longitudeDelta: longitudeDelta,
+        }}
+        onRegionChangeComplete={e => {
+          setLongitudeDelta(e.longitudeDelta)
+          setLatitudeDelta(e.latitudeDelta)
+          setLat(e.latitude)
+          setLng(e.longitude)
         }}
         {...mapOptions}>
         <Marker
@@ -238,14 +279,25 @@ const Area = () => {
           description="This is where I am"
           image={marker}
         />
+         <Marker
+                    coordinate={{
+                        latitude: coordinates.coords.latitude+0.00007565,
+                        longitude: coordinates.coords.longitude+0.00019599,
+                    }}
+                    title="Robots Location"
+                    description="This is where Robot is"
+                    image={robot}
+                    style={{ width: 10, height: 10 }}
+                />
         {polygons.map(polygon => (
           <Polygon
             key={polygon.id}
             coordinates={polygon.coordinates}
             holes={polygon.holes}
-            strokeColor="#F00"
+            strokeColor="rgba(30,0,255,1)"
             fillColor="rgba(0,0,255,0.5)"
-            strokeWidth={1}
+            strokeWidth={2}
+            pointerEvents="box-only"
           />
         ))}
         {polygons && console.log('Polygons', polygons)}
@@ -254,12 +306,20 @@ const Area = () => {
             key={editing.id}
             coordinates={editing.coordinates}
             holes={editing.holes}
-            strokeColor="#F00"
+            strokeColor="rgba(30,0,255,1)"
             fillColor="rgba(0,0,255,0.5)"
-            strokeWidth={1}
+            strokeWidth={2}
           />
         )}
         {editing && console.log('Editing', editing)}
+        {editing && (
+          <Marker
+            coordinate={editing.coordinates[editing.coordinates.length - 1]}
+            title="My Location"
+            description="This is where I am"
+            image={ball}
+          />
+        )}
       </MapView>
 
       <View style={styles.buttonContainerMain}>

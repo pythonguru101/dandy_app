@@ -43,10 +43,10 @@ const initialPosition = {
     timestamp: 1651872653900,
 };
 
-const Area = () => {
-    const myFencing = useSelector(state => state.fencing.data);
+const Area = (props) => {
     const [permission, setPermission] = useState('');
-    const [coordinates, setCoordinates] = useState(initialPosition);
+    const [coordinate, setCoordinates] = useState(initialPosition);
+    const {coordinates,holes,id,image} = props.route.params.map;
     //getting permission if no yet got
     const getPermission = async () => {
         if (Platform.OS === 'android') {
@@ -136,6 +136,7 @@ const Area = () => {
     // remove point from polygon
     const mapOptions = {
         scrollEnabled: true,
+        zoomEnabled: true,
     };
 
     return (
@@ -144,34 +145,35 @@ const Area = () => {
                 provider={PROVIDER_GOOGLE}
                 style={styles.map}
                 mapType={MAP_TYPES.SATELLITE}
-                maxZoomLevel={19}
+                maxZoomLevel={18}
 
-                onPress={e => onPress(e)}
+                // onPress={e => onPress(e)}
                 region={{
-                    latitude: coordinates.coords.latitude,
-                    longitude: coordinates.coords.longitude,
+                    latitude: coordinate.coords.latitude,
+                    longitude: coordinate.coords.longitude,
                     latitudeDelta: LATITUDE_DELTA,
                     longitudeDelta: LONGITUDE_DELTA,
                 }}
                 {...mapOptions}>
                 <Marker
                     coordinate={{
-                        latitude: coordinates.coords.latitude,
-                        longitude: coordinates.coords.longitude,
+                        latitude: coordinate.coords.latitude,
+                        longitude: coordinate.coords.longitude,
                     }}
                     title="My Location"
                     description="This is where I am"
                     image={marker}
+                    style={{ width: 10, height: 10 }}
                 />
                 <Marker
                     coordinate={{
-                        latitude: coordinates.coords.latitude+0.00007565,
-                        longitude: coordinates.coords.longitude+0.00019599,
+                        latitude: coordinate.coords.latitude+0.00007565,
+                        longitude: coordinate.coords.longitude+0.00019599,
                     }}
-                    title="My Location"
-                    description="This is where I am"
+                    title="Robots Location"
+                    description="This is where Robot is"
                     image={robot}
-                    style={{ width: 20, height: 20 }}
+                    style={{ width: 10, height: 10 }}
                 />
 
                 {/* <Heatmap 
@@ -182,10 +184,10 @@ const Area = () => {
                     gradientSmoothing={10}
                     heatmapMode={"POINTS_DENSITY"}/> */}
 
-                {myFencing && myFencing.coordinates && (
+                { coordinates && (
                     <Polygon
-                        coordinates={myFencing.coordinates}
-                        holes={myFencing.holes}
+                        coordinates={coordinates}
+                        holes={holes}
                         strokeColor="#00F"
                         fillColor="rgba(0,0,255,0.5)"
                         strokeWidth={1} />

@@ -3,7 +3,7 @@ import {SAVE_FENCING,SAVE_FENCING_SUCCESS,SAVE_FENCING_FAILURE} from '../ActionT
 
 const initialState = {
     loading: true,
-    data: null,
+    data: [],
     error: null,    
 };
 
@@ -13,16 +13,16 @@ const initialState = {
                 return {
                     ...state,
                     loading: false,
-                    data: action.payload,
+                    data: [...state.data, action.payload],
                     error: null,
                 };
-            case SAVE_FENCING_SUCCESS:
-                return {
-                    ...state,
-                    loading: false,
-                    data: action.payload,
-                    error: null,
-                };
+            // case SAVE_FENCING_SUCCESS:
+            //     return {
+            //         ...state,
+            //         loading: false,
+            //         data: [...state.data, action.payload],
+            //         error: null,
+            //     };
             case SAVE_FENCING_FAILURE:
                 return {
                     ...state,
