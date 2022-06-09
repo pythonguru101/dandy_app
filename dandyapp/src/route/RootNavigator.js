@@ -147,7 +147,7 @@ export default function App() {
                 title: 'Robot Status',
                 headerShown: true,
                 drawerIcon: ({ tintColor }) => (
-                    <Icon name="user" size={24} color={tintColor} />)
+                    <Icon name="exclamation-circle" size={24} color={tintColor} />)
             }} />
         </Drawer.Navigator>
 
