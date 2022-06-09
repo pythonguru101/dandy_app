@@ -26,7 +26,7 @@ import { setRobotData } from '../../redux/Actions/robotActions';
 import { Formik } from 'formik';
 import { setWifiCreds } from '../../services/services'
 
-const devicePrefix = 'Android';
+const devicePrefix = 'dandy';
 const Home = () => {
 
     const [ssid, setSsid] = useState('');
