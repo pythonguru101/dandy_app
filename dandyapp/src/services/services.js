@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-const baseUrl = 'http://dandy_robot';
+const baseUrl = 'http://dandy_robot.local:5000';
 
 export const setWifiCreds = (value) => {
     console.log("Set Wifi cred", value);

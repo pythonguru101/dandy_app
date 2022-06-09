@@ -6,6 +6,9 @@ import {
     Platform,
     SafeAreaView,
     ScrollView,
+    Modal,
+    TextInput,
+    Pressable
 } from 'react-native'
 import React, { useState, useEffect, useCallback } from 'react'
 import WifiManager from "react-native-wifi-reborn";
@@ -18,10 +21,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { currentConnection } from '../../redux/Actions/index'
 import NetInfo from "@react-native-community/netinfo";
 import { useNavigation } from '@react-navigation/native';
-import { getRobotData } from '../../redux/Actions/index';
+import { getRobotData, connectedTo } from '../../redux/Actions/index';
+import { setRobotData } from '../../redux/Actions/robotActions';
+import { Formik } from 'formik';
+import { setWifiCreds } from '../../services/services'
 
-
-
+const devicePrefix = 'Android';
 const Home = () => {
 
     const [ssid, setSsid] = useState('');
@@ -34,9 +39,12 @@ const Home = () => {
     const dispatch = useDispatch();
     const current_connection = useSelector(state => state.connection);
     const robotInfo = useSelector(state => state.connection);
-
+    const networkInfo = useSelector(state => state.network.connectionStatus);
     const navigation = useNavigation();
-
+    const [modalVisible, setModalVisible] = useState(false);
+    const [error, setError] = useState(false);
+    const [connectionsStatus, setConnectionsStatus] = useState(false);
+    const internetConnected = useSelector(state => state.network.connectionStatus);
 
     //find password for provided ssid
     const findPassword = (ssid) => {
@@ -59,14 +67,13 @@ const Home = () => {
                     setWifiConnected(true);
                     getWifiStatus()
                     dispatch(currentConnection(id))
-
+                    setModalVisible(true);
                 })
                 .catch(error => {
                     console.log(error);
                     setWifiConnecting(false);
                     setWifiConnected(false);
                     getWifiStatus()
-
                 });
         }
         else {
@@ -187,8 +194,6 @@ const Home = () => {
         dispatch(getRobotData())
         getPermission()
         const unsubscribe = NetInfo.addEventListener(state => {
-            console.log("Connection type", state);
-            console.log("Is connected?", state.isConnected);
             setIsWifiEnabled(state.isWifiEnabled)
         });
         unsubscribe()
@@ -202,7 +207,11 @@ const Home = () => {
             WifiManager.setEnabled(true);
         }
 
-    }, [permission, wifiStatus, isWifiEnabled]);
+        if (!networkInfo && !internetConnected) {
+            setModalVisible(true)
+        }
+
+    }, [permission, wifiStatus, isWifiEnabled, networkInfo]);
 
     const disconnect = () => {
         WifiManager.disconnect()
@@ -214,28 +223,118 @@ const Home = () => {
             });
     };
 
+    const onSubmitFunction = async (values) => {
+        console.log("Values", values)
+        setWifiCreds(values).then(res => {
+            console.log("Response", res)
+            if (res.status === 200) {
+                setModalVisible(!modalVisible)
+                setError(false)
+                dispatch(setRobotData(res.data))
+                dispatch(connectedTo(res.data.device.connected_ssid))
+            }
+            else {
+                setError(true)
+            }
+
+
+        }
+        ).catch(err => {
+            console.log("Error", err)
+            setError(true)
+        }
+        )
+    };
+
     return (
         <SafeAreaView style={styles.container}>
-            <Card
-                name={`${current_connection.wifi}`.includes("DANDY") ? `${current_connection.wifi}` : "No Dandy connected"}
+            {`${current_connection.wifi}`.includes(devicePrefix) && <Card
+                name={`${current_connection.wifi}`.includes(devicePrefix) ? `${current_connection.wifi}` : "No Dandy connected"}
                 count={current_connection.wifi === ssid ? 100 : "N/A"}
                 onTap={() => current_connection.wifi === ssid ? disconnect() : connectToWifi(current_connection.wifi)}
                 onWHoleTap={() => navigation.navigate('Devices')}
                 buttonText={current_connection.wifi === ssid ? "Disconnect" : "Connect"}
-
-            />
+            />}
             <KeyboardAvoidingView
                 style={{ alignItems: 'center' }}
             >
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                        setModalVisible(!modalVisible);
+                    }}>
+                    <View style={styles.centeredView}>
+                        <Formik
+                            initialValues={{ ssid: '', password: '' }}
+                            onSubmit={values => {
+                                onSubmitFunction(values);
+                                ToastAndroid.show(
+                                    `Connecting to${values.ssid}`,
+                                    ToastAndroid.SHORT,
+                                );
+                                setTimeout(() => {
+                                    ToastAndroid.show(
+                                        `Connected to${values.ssid}`,
+                                        ToastAndroid.LONG,
+                                    );
+                                    setModalVisible(!modalVisible);
+                                }, 1000);
+                            }}>
+                            {({ handleChange, handleBlur, handleSubmit, values }) => (
+                                <View style={styles.modalView}>
+                                    <Text style={styles.modalText}>Connect To Wifi</Text>
+                                    {error && <Text style={{ color: "red" }}>Couldn't connect to wifi</Text>}
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={handleChange('ssid')}
+                                        onBlur={handleBlur('ssid')}
+                                        value={values.ssid}
+                                        placeholder="SSID"
+                                        keyboardType="default"
+                                    />
+                                    <TextInput
+                                        style={styles.input}
+                                        secureTextEntry={true}
+                                        onChangeText={handleChange('password')}
+                                        onBlur={handleBlur('password')}
+                                        value={values.password}
+                                        placeholder="Password"
+                                        keyboardType="default"
+                                    />
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                        }}>
+                                        <Pressable
+                                            style={[styles.button, styles.buttonConnect]}
+                                            onPress={handleSubmit}>
+                                            <Text style={styles.textStyle}>Connect</Text>
+                                        </Pressable>
+                                        <Pressable
+                                            style={[styles.button, styles.buttonCancel]}
+                                            onPress={() => setModalVisible(!modalVisible)}>
+                                            <Text style={styles.textStyle}>Cancel</Text>
+                                        </Pressable>
+                                    </View>
+                                </View>
+                            )}
+                        </Formik>
+                    </View>
+                </Modal>
+
                 <View>
-                    <CircularButton
+                    {!`${current_connection.wifi}`.includes(devicePrefix) && <CircularButton
                         buttonText={"Add Device"}
                         onTap={() => getDeviceList()}
-                    />
+                    />}
                     <ScrollView>
                         {deviceList.length > 0 ? deviceList.map((wifi, index) => {
-                            console.log("mapped", wifi.SSID.includes("DANDY_MARK1"))
-                            if (wifi.SSID.includes("dandy")) {
+                            if (wifi.SSID.includes(devicePrefix) && !current_connection.wifi.includes(devicePrefix)) {
                                 return (
                                     <Card
                                         key={index}
@@ -254,7 +353,7 @@ const Home = () => {
                             else {
                                 return null
                             }
-                        }) : <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to connect</Text>
+                        }) : (! `${current_connection.wifi}`.includes(devicePrefix) && <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to connect</Text>)
                         }
                     </ScrollView>
                 </View>

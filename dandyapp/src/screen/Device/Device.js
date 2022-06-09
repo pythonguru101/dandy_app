@@ -211,9 +211,6 @@ const Device = () => {
       console.log("Error", err)
     }
     )
-
-
-
   };
 
 

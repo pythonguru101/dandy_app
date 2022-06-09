@@ -35,8 +35,8 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-        width: "100%",
-        height: "30%"
+        width: "90%",
+        // height: "30%",
 
     },
     button: {
@@ -62,21 +62,29 @@ export const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: "center",
-        fontSize: 20
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#2196F3"
     },
     centeredView: {
         flex: 1,
-        justifyContent: "flex-end",
+        justifyContent: "center",
         alignItems: "center",
-        marginTop: 22,
         width: "100%",
-        height: 200
+        height: 200,
+        alignSelf: "center",
+        backgroundColor: "rgba(0,0,0,0.5)",
     },
     input: {
         height: 40,
         margin: 12,
         borderWidth: 1,
         padding: 10,
+        borderColor: '#f2c041',
+        borderRadius: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        color: "black"
     },
 
 })

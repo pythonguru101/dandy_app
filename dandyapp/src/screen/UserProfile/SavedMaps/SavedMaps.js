@@ -38,7 +38,7 @@
 //       });
 //     },[])
 
- 
+
 //   return (
 //     <View style={styles.container}>
 //     <FlatList style={styles.list}
@@ -112,7 +112,7 @@
 //       },
 //       shadowOpacity: 0.32,
 //       shadowRadius: 5.46,
-  
+
 //       elevation: 9,
 //     },
 //     /******** card components **************/
@@ -134,38 +134,38 @@ import {
   View,
   Image,
   ScrollView,
- TouchableOpacity
+  TouchableOpacity
 } from 'react-native';
 import mapIcon from '../../../assets/mapicon.png'
 import { useSelector } from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
-const  data= [
-  {id:1, icon:"https://bootdey.com/img/Content/avatar/avatar1.png", description: "No Data"},
+import { useNavigation } from '@react-navigation/native';
+const data = [
+  { id: 1, icon: "https://bootdey.com/img/Content/avatar/avatar1.png", description: "No Data" },
 ]
 
 const SavedMaps = () => {
 
-const fencings= useSelector(state => state.fencing.data);
-const navigation = useNavigation();
-    return (
-      <ScrollView style={styles.container}>
-        <View 
-          style={styles.notificationList}
-          >
-              {fencings.length>0 && fencings.map((item,index)=> 
-              <TouchableOpacity onPress={()=>navigation.navigate('MapView',{map:item})}>
-              <View style={styles.notificationBox}>
-                <Image style={styles.image}
-                  source={mapIcon}/>
-                <Text style={styles.name}>Map {index+1}</Text>
-                <Text style={styles.name}>{item.date}</Text>
-              </View>
-              </TouchableOpacity>
-              )}
-        
+  const fencings = useSelector(state => state.fencing.data);
+  const navigation = useNavigation();
+  return (
+    <ScrollView style={styles.container}>
+      <View
+        style={styles.notificationList}
+      >
+        {fencings.length > 0 && fencings.map((item, index) =>
+          <TouchableOpacity key={index} onPress={() => navigation.navigate('MapView', { map: item })}>
+            <View style={styles.notificationBox}>
+              <Image style={styles.image}
+                source={mapIcon} />
+              <Text style={styles.name}>Map {index + 1}</Text>
+              <Text style={styles.name}>{item.date}</Text>
             </View>
-      </ScrollView>
-    );
+          </TouchableOpacity>
+        )}
+
+      </View>
+    </ScrollView>
+  );
 }
 
 export default SavedMaps
@@ -174,62 +174,61 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#EBEBEB',
   },
-  formContent:{
+  formContent: {
     flexDirection: 'row',
     // marginTop:30,
   },
   inputContainer: {
-      borderBottomColor: '#F5FCFF',
-      backgroundColor: '#FFFFFF',
-      borderRadius:30,
-      borderBottomWidth: 1,
-      height:45,
-      flexDirection: 'row',
-      alignItems:'center',
-      flex:1,
-      margin:10,
-  },
-  icon:{
-    width:30,
-    height:30,
-  },
-  iconBtnSearch:{
-    alignSelf:'center'
-  },
-  inputs:{
-      height:45,
-      marginLeft:16,
-      borderBottomColor: '#FFFFFF',
-      flex:1,
-  },
-  inputIcon:{
-    marginLeft:15,
-    justifyContent: 'center'
-  },
-  notificationList:{
-    // marginTop:20,
-    padding:10,
-  },
-  notificationBox: {
-    paddingTop:10,
-    paddingBottom:10,
-    marginTop:5,
+    borderBottomColor: '#F5FCFF',
     backgroundColor: '#FFFFFF',
+    borderRadius: 30,
+    borderBottomWidth: 1,
+    height: 45,
     flexDirection: 'row',
-    borderRadius:10,
+    alignItems: 'center',
+    flex: 1,
+    margin: 10,
   },
-  image:{
-    width:45,
-    height:45,
-    borderRadius:20,
-    marginLeft:20
+  icon: {
+    width: 30,
+    height: 30,
   },
-  name:{
-    fontSize:20,
-    fontWeight: 'bold',
-    color: "#000000",
-    marginLeft:10,
+  iconBtnSearch: {
     alignSelf: 'center'
   },
-}); 
-                       
+  inputs: {
+    height: 45,
+    marginLeft: 16,
+    borderBottomColor: '#FFFFFF',
+    flex: 1,
+  },
+  inputIcon: {
+    marginLeft: 15,
+    justifyContent: 'center'
+  },
+  notificationList: {
+    // marginTop:20,
+    padding: 10,
+  },
+  notificationBox: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginTop: 5,
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    borderRadius: 10,
+  },
+  image: {
+    width: 45,
+    height: 45,
+    borderRadius: 20,
+    marginLeft: 20
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: "#000000",
+    marginLeft: 10,
+    alignSelf: 'center'
+  },
+});

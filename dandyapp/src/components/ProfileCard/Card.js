@@ -1,18 +1,18 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import Dandy from '../../assets/dandy.png'
-const ProfileCard = ({ name, count, buttonText, onTap, onWHoleTap,status }) => {
+const ProfileCard = ({ hours, milage, count }) => {
 
     return (
         <View>
-            <View style={styles.card} onPress={onWHoleTap}>
+            <View style={styles.card} >
                 <Image style={styles.image} source={Dandy} />
                 <View style={styles.cardContent}>
-                    <Text style={styles.name}>Total Hours of Cleaning : 200 Hours </Text>
-                    <Text style={styles.name}>Total Area of Cleaning : 200 Meters </Text>
-                    <Text style={styles.name}>Paired Devices : 2 </Text>
+                    <Text style={styles.name}>Total Hours of Cleaning : {hours} Hours </Text>
+                    <Text style={styles.name}>Total Area of Cleaning : {milage} Meters </Text>
+                    <Text style={styles.name}>Paired Devices : {count} </Text>
 
-                    {count && <Text style={styles.count}>Battery:{count}%</Text>}
+                    {/* {count && <Text style={styles.count}>Battery:{count}%</Text>} */}
                     {/* <TouchableOpacity style={styles.disconnectButton} onPress={onTap}>
                         <Text style={styles.followButtonText}>{buttonText}</Text>
                     </TouchableOpacity> */}
@@ -94,12 +94,12 @@ const styles = StyleSheet.create({
         color: "#000",
         fontSize: 12,
     },
-    online:{
+    online: {
         fontSize: 12,
-        color:"green",
+        color: "green",
     },
-    offline:{
+    offline: {
         fontSize: 12,
-        color:"red",
+        color: "red",
     }
 })

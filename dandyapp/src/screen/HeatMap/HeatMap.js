@@ -43,76 +43,76 @@ const initialPosition = {
     timestamp: 1651872653900,
 };
 const points = [
-    {latitude: 6.83646681, longitude: 79.77121907, weight: 1},
-    {latitude: 6.82776681, longitude: 79.871319, weight: 1},
-    {latitude: 6.82176681, longitude: 79.871319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.871319, weight: 1},
-    {latitude: 6.83176681, longitude: 79.871319, weight: 1},
-    {latitude: 6.83976681, longitude: 79.861319, weight: 1},
-    {latitude: 6.83076681, longitude: 79.861319, weight: 1},
-    {latitude: 6.82776681, longitude: 79.861319, weight: 1},
-    {latitude: 6.82076681, longitude: 79.871319, weight: 1},
-    {latitude: 6.82076681, longitude: 79.861319, weight: 1},
-    {latitude: 6.81076681, longitude: 79.861319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.869319, weight: 1},
-    {latitude: 6.83276681, longitude: 79.869319, weight: 1},
-    {latitude: 6.81976681, longitude: 79.869319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.867319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.865319, weight: 1},
-    {latitude: 6.83646681, longitude: 79.77121907, weight: 1},
-    {latitude: 6.82776681, longitude: 79.871319, weight: 1},
-    {latitude: 6.82176681, longitude: 79.871319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.871319, weight: 1},
-    {latitude: 6.83176681, longitude: 79.871319, weight: 1},
-    {latitude: 6.83976681, longitude: 79.861319, weight: 1},
-    {latitude: 6.83076681, longitude: 79.861319, weight: 1},
-    {latitude: 6.82776681, longitude: 79.861319, weight: 1},
-    {latitude: 6.82076681, longitude: 79.871319, weight: 1},
-    {latitude: 6.82076681, longitude: 79.861319, weight: 1},
-    {latitude: 6.81076681, longitude: 79.861319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.869319, weight: 1},
-    {latitude: 6.83276681, longitude: 79.869319, weight: 1},
-    {latitude: 6.81976681, longitude: 79.869319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.867319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.865319, weight: 1},
-    {latitude: 6.84076681, longitude: 79.871319, weight: 1},
-    {latitude: 6.83646681, longitude: 79.77121907, weight: 1},
-    {latitude: 6.82776681, longitude: 79.871319, weight: 1},
-    {latitude: 6.82176681, longitude: 79.871319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.871319, weight: 1},
-    {latitude: 6.83176681, longitude: 79.871319, weight: 1},
-    {latitude: 6.83976681, longitude: 79.861319, weight: 1},
-    {latitude: 6.83076681, longitude: 79.861319, weight: 1},
-    {latitude: 6.82776681, longitude: 79.861319, weight: 1},
-    {latitude: 6.82076681, longitude: 79.871319, weight: 1},
-    {latitude: 6.82076681, longitude: 79.861319, weight: 1},
-    {latitude: 6.81076681, longitude: 79.861319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.869319, weight: 1},
-    {latitude: 6.83276681, longitude: 79.869319, weight: 1},
-    {latitude: 6.81976681, longitude: 79.869319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.867319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.865319, weight: 1},
-    {latitude: 6.84076681, longitude: 79.871319, weight: 1},
-    {latitude: 6.841776681, longitude: 79.869319, weight: 1},
-    {latitude: 6.83646681, longitude: 79.77121907, weight: 1},
-    {latitude: 6.82776681, longitude: 79.871319, weight: 1},
-    {latitude: 6.82176681, longitude: 79.871319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.871319, weight: 1},
-    {latitude: 6.83176681, longitude: 79.871319, weight: 1},
-    {latitude: 6.83976681, longitude: 79.861319, weight: 1},
-    {latitude: 6.83076681, longitude: 79.861319, weight: 1},
-    {latitude: 6.82776681, longitude: 79.861319, weight: 1},
-    {latitude: 6.82076681, longitude: 79.871319, weight: 1},
-    {latitude: 6.82076681, longitude: 79.861319, weight: 1},
-    {latitude: 6.81076681, longitude: 79.861319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.869319, weight: 1},
-    {latitude: 6.83276681, longitude: 79.869319, weight: 1},
-    {latitude: 6.81976681, longitude: 79.869319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.867319, weight: 1},
-    {latitude: 6.83776681, longitude: 79.865319, weight: 1},
-    {latitude: 6.84076681, longitude: 79.871319, weight: 1},
-    {latitude: 6.841776681, longitude: 79.869319, weight: 1},
-    {latitude: 6.84076681, longitude: 79.871319, weight: 1},
+    { latitude: 6.83646681, longitude: 79.77121907, weight: 1 },
+    { latitude: 6.82776681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.82176681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.83176681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.83976681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.83076681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.82776681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.82076681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.82076681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.81076681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.83276681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.81976681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.867319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.865319, weight: 1 },
+    { latitude: 6.83646681, longitude: 79.77121907, weight: 1 },
+    { latitude: 6.82776681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.82176681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.83176681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.83976681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.83076681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.82776681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.82076681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.82076681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.81076681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.83276681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.81976681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.867319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.865319, weight: 1 },
+    { latitude: 6.84076681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.83646681, longitude: 79.77121907, weight: 1 },
+    { latitude: 6.82776681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.82176681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.83176681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.83976681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.83076681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.82776681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.82076681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.82076681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.81076681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.83276681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.81976681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.867319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.865319, weight: 1 },
+    { latitude: 6.84076681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.841776681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.83646681, longitude: 79.77121907, weight: 1 },
+    { latitude: 6.82776681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.82176681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.83176681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.83976681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.83076681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.82776681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.82076681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.82076681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.81076681, longitude: 79.861319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.83276681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.81976681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.867319, weight: 1 },
+    { latitude: 6.83776681, longitude: 79.865319, weight: 1 },
+    { latitude: 6.84076681, longitude: 79.871319, weight: 1 },
+    { latitude: 6.841776681, longitude: 79.869319, weight: 1 },
+    { latitude: 6.84076681, longitude: 79.871319, weight: 1 },
 
 ];
 const Area = () => {
@@ -120,7 +120,7 @@ const Area = () => {
     const [permission, setPermission] = useState('');
     const [coordinates, setCoordinates] = useState(initialPosition);
     //getting permission if no yet got
-    console.table("points",points )
+    console.table("points", points)
     const getPermission = async () => {
         if (Platform.OS === 'android') {
             try {
@@ -238,8 +238,8 @@ const Area = () => {
                 />
                 <Marker
                     coordinate={{
-                        latitude: coordinates.coords.latitude+0.00007565,
-                        longitude: coordinates.coords.longitude+0.00019599,
+                        latitude: coordinates.coords.latitude + 0.00007565,
+                        longitude: coordinates.coords.longitude + 0.00019599,
                     }}
                     title="My Location"
                     description="This is where I am"
@@ -248,17 +248,15 @@ const Area = () => {
                 />
 
                 <Heatmap
-                points={[{latitude: coordinates.coords.latitude+0.00079565, longitude: coordinates.coords.longitude+0.00019599, weight: 1}]}
-                opacity={0.7}
-                radius={100}
-                maxIntensity={20}
-                gradientSmoothing={0.2}
-                heatmapMode={"POINTS_DENSITY"}
-                
+                    points={[{ latitude: coordinates.coords.latitude + 0.00079565, longitude: coordinates.coords.longitude + 0.00019599, weight: 1 }]}
+                    opacity={0.7}
+                    radius={80}
+                    maxIntensity={20}
+                    gradientSmoothing={0.2}
+                    heatmapMode={"POINTS_DENSITY"}
+
                 />
 
-
-          
 
                 {myFencing && myFencing.coordinates && (
                     <Polygon
