@@ -26,7 +26,7 @@ const RobotStatus = () => {
                         {/* <Text style={styles.mblTxt}>{item.date}</Text> */}
                     </View>
                     <View style={styles.msgContainer}>
-                        <Text style={robotData.wheel_1 ? styles.msgTxt : styles.msgTxt2}>{robotData.wheel_1 ? "Active" : "Inactive"}</Text>
+                        <Text style={robotData?.wheel_1 ? styles.msgTxt : styles.msgTxt2}>{robotData?.wheel_1 ? "Active" : "Inactive"}</Text>
                     </View>
                 </View>
             </View>
@@ -38,7 +38,7 @@ const RobotStatus = () => {
                         {/* <Text style={styles.mblTxt}>{item.date}</Text> */}
                     </View>
                     <View style={styles.msgContainer}>
-                        <Text style={robotData.wheel_2 ? styles.msgTxt : styles.msgTxt2}>{robotData.wheel_2 ? "Active" : "Inactive"}</Text>
+                        <Text style={robotData?.wheel_2 ? styles.msgTxt : styles.msgTxt2}>{robotData?.wheel_2 ? "Active" : "Inactive"}</Text>
                     </View>
                 </View>
             </View>
@@ -50,7 +50,7 @@ const RobotStatus = () => {
                         {/* <Text style={styles.mblTxt}>{item.date}</Text> */}
                     </View>
                     <View style={styles.msgContainer}>
-                        <Text style={robotData.wheel_3 ? styles.msgTxt : styles.msgTxt2}>{robotData.wheel_3 ? "Active" : "Inactive"}</Text>
+                        <Text style={robotData?.wheel_3 ? styles.msgTxt : styles.msgTxt2}>{robotData?.wheel_3 ? "Active" : "Inactive"}</Text>
                     </View>
                 </View>
             </View>
@@ -62,7 +62,7 @@ const RobotStatus = () => {
                         {/* <Text style={styles.mblTxt}>{item.date}</Text> */}
                     </View>
                     <View style={styles.msgContainer}>
-                        <Text style={robotData.wheel_4 ? styles.msgTxt : styles.msgTxt2}>{robotData.wheel_4 ? "Active" : "Inactive"}</Text>
+                        <Text style={robotData?.wheel_4 ? styles.msgTxt : styles.msgTxt2}>{robotData?.wheel_4 ? "Active" : "Inactive"}</Text>
                     </View>
                 </View>
             </View>
@@ -74,7 +74,7 @@ const RobotStatus = () => {
                         {/* <Text style={styles.mblTxt}>{item.date}</Text> */}
                     </View>
                     <View style={styles.msgContainer}>
-                        <Text style={robotData.motor ? styles.msgTxt : styles.msgTxt2}>{robotData.sensor ? "Active" : "Inactive"}</Text>
+                        <Text style={robotData?.motor ? styles.msgTxt : styles.msgTxt2}>{robotData?.sensor ? "Active" : "Inactive"}</Text>
                     </View>
                 </View>
             </View>
@@ -86,7 +86,7 @@ const RobotStatus = () => {
                         {/* <Text style={styles.mblTxt}>{item.date}</Text> */}
                     </View>
                     <View style={styles.msgContainer}>
-                        <Text style={robotData.sensor ? styles.msgTxt : styles.msgTxt2}>{robotData.motor ? "Active" : "Inactive"}</Text>
+                        <Text style={robotData?.sensor ? styles.msgTxt : styles.msgTxt2}>{robotData?.motor ? "Active" : "Inactive"}</Text>
                     </View>
                 </View>
             </View>
@@ -94,11 +94,11 @@ const RobotStatus = () => {
                 <Image source={clipper} style={styles.pic} />
                 <View>
                     <View style={styles.nameContainer}>
-                        <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{robotData.clipper ? "Active" : "Inactive"}</Text>
+                        <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">Clipper</Text>
                         {/* <Text style={styles.mblTxt}>{item.date}</Text> */}
                     </View>
                     <View style={styles.msgContainer}>
-                        <Text style={robotData.clipper ? styles.msgTxt : styles.msgTxt2}>Active</Text>
+                        <Text style={robotData?.clipper ? styles.msgTxt : styles.msgTxt2}>{robotData?.clipper ? "Active" : "Inactive"}</Text>
                     </View>
                 </View>
             </View>

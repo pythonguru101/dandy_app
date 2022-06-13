@@ -6,6 +6,7 @@ import connectionReducer from './connectionReducer';
 import NetworkReducer from './networkConnection';
 import FencingReducer from './areaReducer';
 import RobotReducer from './robotReducer';
+import RobotScheduleReducer from './robotSchedule.reducer';
 
 export default combineReducers({
   count: CountReducer,
@@ -13,4 +14,5 @@ export default combineReducers({
   network: NetworkReducer,
   fencing: FencingReducer,
   robot: RobotReducer,
+  schedule: RobotScheduleReducer
 });

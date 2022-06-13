@@ -19,3 +19,11 @@ export const getdeviceslocation = () => {
 
 
 
+export const checkSoftwareUpdate = () => {
+  return setInterval(() => {
+    return true;
+  }
+    , 1000000);
+
+}
+

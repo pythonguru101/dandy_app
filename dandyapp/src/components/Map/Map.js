@@ -123,13 +123,10 @@ const Area = (props) => {
     useEffect(() => {
         getPermission();
         //Checking permission
-        if (
-            permission === PermissionsAndroid.RESULTS.GRANTED ||
-            permission === RESULTS.GRANTED
-        ) {
+      
             //Getting location
             getCurrentLocation();
-        }
+      
     }, [permission]);
 
 
@@ -145,8 +142,8 @@ const Area = (props) => {
                 provider={PROVIDER_GOOGLE}
                 style={styles.map}
                 mapType={MAP_TYPES.SATELLITE}
-                maxZoomLevel={18}
-
+                maxZoomLevel={20}
+                zoomEnabled={true}
                 // onPress={e => onPress(e)}
                 region={{
                     latitude: coordinate.coords.latitude,
@@ -184,7 +181,7 @@ const Area = (props) => {
                     gradientSmoothing={10}
                     heatmapMode={"POINTS_DENSITY"}/> */}
 
-                { coordinates && (
+                { coordinates?.length>0 && (
                     <Polygon
                         coordinates={coordinates}
                         holes={holes}

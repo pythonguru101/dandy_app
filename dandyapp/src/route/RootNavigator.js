@@ -14,7 +14,10 @@ import SavedMaps from '../screen/UserProfile/SavedMaps/SavedMaps';
 import CleaningHistory from '../screen/UserProfile/CleaningHistory/CleaningHistory';
 import PairedDevices from '../screen/UserProfile/PairedDevices/PairedDevices';
 import RobotStatus from '../screen/RobotStatus/RobotStatus';
+import CleanAlert from '../screen/CleanAlert/CleanAlert';
+import WalkAroundMarker from '../screen/WalkAroundMarker/WalkAroundMarker';
 import { useSelector } from 'react-redux';
+import CheckUpdate from '../screen/CheckUpdate/CheckUpdate';
 
 
 const Drawer = createDrawerNavigator();
@@ -65,6 +68,18 @@ const ProfileStack = () => (
                 fontWeight: 'bold',
             },
         }} />
+        <Stack.Screen name="MapView" component={Map} options={{
+            headerShown: true,
+            title: 'Map View',
+            headerStyle: {
+                backgroundColor: '#fff',
+            },
+            headerTintColor: '#000',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+        }} />
+        
     </Stack.Navigator>
 );
 
@@ -98,6 +113,37 @@ const DeviceStack = () => (
     </Stack.Navigator>
 )
 
+const SettingsStack = () => (
+    <Stack.Navigator>
+        <Stack.Screen name="Settings" component={Settings} options={{
+            headerShown: true,
+            title: 'Settings',
+            headerStyle: {
+                backgroundColor: '#fff',
+            },
+            headerTintColor: '#000',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+            headerLeft: () => (
+                <DrawerToggleButton />
+            )
+        }} />
+        <Stack.Screen name="ChekUpdate" component={CheckUpdate} options={{
+            headerShown: true,
+            title: 'Software Update',
+            headerStyle: {
+                backgroundColor: '#fff',
+            },
+            headerTintColor: '#000',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            }
+        }} />
+    </Stack.Navigator>
+)
+
+
 export default function App() {
 
     const currentConection = useSelector(state => state.connection.wifi);
@@ -120,18 +166,14 @@ export default function App() {
                 drawerIcon: ({ tintColor }) => (
                     <Icon name="robot" size={24} color={tintColor} />)
             }} /> */}
-            <Drawer.Screen name="Settings" component={Settings}
-                options={{
-                    title: 'Settings',
-                    drawerIcon: ({ tintColor }) => (
-                        <Icon name="cog" size={24} color={tintColor} />)
-                }}
-            />
-            {currentConection.includes("Android") && <Drawer.Screen name="Map" component={Area} options={{
+           
+            {/* {currentConection.includes("dandy") && */}
+             <Drawer.Screen name="Map" component={Area} options={{
                 title: 'Map',
                 drawerIcon: ({ tintColor }) => (
                     <Icon name="map-marked-alt" size={24} color={tintColor} />)
-            }} />}
+            }} />
+            {/* } */}
             <Drawer.Screen name="HeatMap" component={HeatMap} options={{
                 title: 'Heat Map',
                 drawerIcon: ({ tintColor }) => (
@@ -149,6 +191,26 @@ export default function App() {
                 drawerIcon: ({ tintColor }) => (
                     <Icon name="exclamation-circle" size={24} color={tintColor} />)
             }} />
+             <Drawer.Screen name="CleanAlert" component={CleanAlert} options={{
+                title: 'Clean Alert',
+                headerShown: true,
+                drawerIcon: ({ tintColor }) => (
+                    <Icon name="trash-restore-alt" size={24} color={tintColor} />)
+            }} />
+            <Drawer.Screen name="WalkAroundMarker" component={WalkAroundMarker} options={{
+                title: 'Walk Around Marker',
+                headerShown: true,
+                drawerIcon: ({ tintColor }) => (
+                    <Icon name="map-marker-alt" size={24} color={tintColor} />)
+            }} />
+             <Drawer.Screen name="SettingsStack" component={SettingsStack}
+                options={{
+                    title: 'Settings',
+                    headerShown: false,
+                    drawerIcon: ({ tintColor }) => (
+                        <Icon name="cog" size={24} color={tintColor} />)
+                }}
+            />
         </Drawer.Navigator>
 
     );

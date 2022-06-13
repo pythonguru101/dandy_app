@@ -26,7 +26,7 @@ import { setRobotData } from '../../redux/Actions/robotActions';
 import { Formik } from 'formik';
 import { setWifiCreds } from '../../services/services'
 
-const devicePrefix = 'dandy';
+const devicePrefix = 'DANDY';
 const Home = () => {
 
     const [ssid, setSsid] = useState('');
@@ -116,6 +116,7 @@ const Home = () => {
         if (Platform.OS === 'android') {
             await WifiManager.loadWifiList().then(wifiList => {
                 setWifiList(wifiList);
+                console.log("wifi list",wifiList)
             });
         }
         else {
@@ -207,9 +208,9 @@ const Home = () => {
             WifiManager.setEnabled(true);
         }
 
-        if (!networkInfo && !internetConnected) {
-            setModalVisible(true)
-        }
+        // if (!networkInfo && !internetConnected) {
+        //     setModalVisible(true)
+        // }
 
     }, [permission, wifiStatus, isWifiEnabled, networkInfo]);
 
@@ -248,11 +249,11 @@ const Home = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            {`${current_connection.wifi}`.includes(devicePrefix) && <Card
+            {`${ssid}`.includes(devicePrefix) && <Card
                 name={`${current_connection.wifi}`.includes(devicePrefix) ? `${current_connection.wifi}` : "No Dandy connected"}
                 count={current_connection.wifi === ssid ? 100 : "N/A"}
                 onTap={() => current_connection.wifi === ssid ? disconnect() : connectToWifi(current_connection.wifi)}
-                onWHoleTap={() => navigation.navigate('Devices')}
+                // onWHoleTap={() => navigation.navigate('Devices')}
                 buttonText={current_connection.wifi === ssid ? "Disconnect" : "Connect"}
             />}
             <KeyboardAvoidingView
@@ -328,13 +329,14 @@ const Home = () => {
                 </Modal>
 
                 <View>
-                    {!`${current_connection.wifi}`.includes(devicePrefix) && <CircularButton
+                    {!`${ssid}`.includes(devicePrefix) && 
+                    <CircularButton
                         buttonText={"Add Device"}
                         onTap={() => getDeviceList()}
                     />}
                     <ScrollView>
                         {deviceList.length > 0 ? deviceList.map((wifi, index) => {
-                            if (wifi.SSID.includes(devicePrefix) && !current_connection.wifi.includes(devicePrefix)) {
+                            if (wifi.SSID.includes(devicePrefix) && !ssid.includes(devicePrefix)) {
                                 return (
                                     <Card
                                         key={index}
@@ -353,7 +355,8 @@ const Home = () => {
                             else {
                                 return null
                             }
-                        }) : (! `${current_connection.wifi}`.includes(devicePrefix) && <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to connect</Text>)
+                        }) : (!`${current_connection.wifi}`.includes(devicePrefix) || !`${ssid}`.includes(devicePrefix) && 
+                        <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to connect</Text>)
                         }
                     </ScrollView>
                 </View>

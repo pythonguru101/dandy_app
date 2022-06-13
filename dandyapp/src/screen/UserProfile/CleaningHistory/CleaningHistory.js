@@ -11,18 +11,7 @@ import {
 } from 'react-native';
 import grasscutter from '../../../assets/cutting.png'
 import { useSelector } from 'react-redux';
-const calls = [
-    { name: "Back Yard", status: "Complete", date: "05/06/2022" },
-    { name: "Yard", status: "Complete", date: "05/06/2022" },
-    { name: "Garden", status: "Complete", date: "05/06/2022" },
-    { name: "Roof", status: "Complete", date: "05/06/2022" },
-    { name: "Roof", status: "Incomplete", date: "05/06/2022" },
-    { name: "Back Yard", status: "Complete", date: "05/06/2022" },
-    { name: "Garden", status: "Incomplete", date: "05/06/2022" },
-    { name: "Garden", status: "Complete", date: "05/06/2022" },
-    { name: "Back Yard", status: "Complete", date: "05/06/2022" },
-    { name: "Garden", status: "Incomplete", date: "05/06/2022" },
-]
+
 const CleaningHistory = () => {
     const mapData = useSelector(state => state.fencing.data)
     const renderItem = ({ item }) => {

@@ -32,6 +32,7 @@ export const connectToWifi = (data) => {
 }
 
 export const saveFencing = (data) => {
+  console.log("save",data)
   return {
     type: SAVE_FENCING,
     payload: data
