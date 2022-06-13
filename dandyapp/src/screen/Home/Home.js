@@ -26,7 +26,7 @@ import { setRobotData } from '../../redux/Actions/robotActions';
 import { Formik } from 'formik';
 import { setWifiCreds } from '../../services/services'
 
-const devicePrefix = 'DANDY';
+const devicePrefix = 'dandy';
 const Home = () => {
 
     const [ssid, setSsid] = useState('');
@@ -116,7 +116,7 @@ const Home = () => {
         if (Platform.OS === 'android') {
             await WifiManager.loadWifiList().then(wifiList => {
                 setWifiList(wifiList);
-                console.log("wifi list",wifiList)
+                console.log("wifi list", wifiList)
             });
         }
         else {
@@ -329,11 +329,11 @@ const Home = () => {
                 </Modal>
 
                 <View>
-                    {!`${ssid}`.includes(devicePrefix) && 
-                    <CircularButton
-                        buttonText={"Add Device"}
-                        onTap={() => getDeviceList()}
-                    />}
+                    {!`${ssid}`.includes(devicePrefix) &&
+                        <CircularButton
+                            buttonText={"Add Device"}
+                            onTap={() => getDeviceList()}
+                        />}
                     <ScrollView>
                         {deviceList.length > 0 ? deviceList.map((wifi, index) => {
                             if (wifi.SSID.includes(devicePrefix) && !ssid.includes(devicePrefix)) {
@@ -355,8 +355,8 @@ const Home = () => {
                             else {
                                 return null
                             }
-                        }) : (!`${current_connection.wifi}`.includes(devicePrefix) || !`${ssid}`.includes(devicePrefix) && 
-                        <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to connect</Text>)
+                        }) : (!`${current_connection.wifi}`.includes(devicePrefix) || !`${ssid}`.includes(devicePrefix) &&
+                            <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to connect</Text>)
                         }
                     </ScrollView>
                 </View>
