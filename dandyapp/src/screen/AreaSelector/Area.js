@@ -25,7 +25,7 @@ import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveFencing } from '../../redux/Actions';
 import { setFencingCoords } from '../../services/services';
-import ViewShot, { captureScreen } from "react-native-view-shot";
+import { captureScreen } from "react-native-view-shot";
 import RNFS from 'react-native-fs';
 import { Formik } from 'formik';
 
@@ -56,6 +56,8 @@ const Area = () => {
   const [longitudeDelta, setLongitudeDelta] = useState(latitudeDelta * ASPECT_RATIO);
   const [lat, setLat] = useState(initialPosition.coords.latitude);
   const [lng, setLng] = useState(initialPosition.coords.longitude);
+  const [regionlat, setRegionLat] = useState(initialPosition.coords.latitude);
+  const [regionlng, setRegionLng] = useState(initialPosition.coords.longitude);
   const [creatingHole, setCreatingHole] = useState(false);
   const [permission, setPermission] = useState('');
   const [coordinates, setCoordinates] = useState(initialPosition);
@@ -63,7 +65,7 @@ const Area = () => {
   const fencing = useSelector(state => state.fencing);
   const [showMap, setShowMap] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [mapName, setMapName] = useState('');
+  // const [mapName, setMapName] = useState('');
   //getting permission if no yet got
   const getPermission = async () => {
     if (Platform.OS === 'android') {
@@ -124,10 +126,14 @@ const Area = () => {
 
   //getting location on request
   const getCurrentLocation = () => {
+    console.log("getting location")
     Geolocation.getCurrentPosition(
       position => {
+        console.log("current position ", position);
         setLat(position.coords.latitude);
         setLng(position.coords.longitude);
+        setRegionLat(position.coords.latitude);
+        setRegionLng(position.coords.longitude);
       },
       error => {
         // See error code charts below.
@@ -135,6 +141,8 @@ const Area = () => {
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
+
+
   };
 
   useEffect(() => {
@@ -147,7 +155,13 @@ const Area = () => {
       //Getting location
       getCurrentLocation();
     }
+
+    return () => {
+      Geolocation.stopObserving();
+    }
   }, [permission, fencing]);
+
+
   const finish = (name) => {
     setPolygons([...polygons, editing]);
     setEditing(null);
@@ -156,7 +170,6 @@ const Area = () => {
     setFencingCoords(editing)
       .then(res => { ToastAndroid.show('Fencing coordinates saved', ToastAndroid.LONG) })
       .catch(err => { ToastAndroid.show('Fencing coordinates not saved', ToastAndroid.LONG) });
-
     captureScreen({
       format: "jpg",
       quality: 0.8
@@ -169,10 +182,8 @@ const Area = () => {
         editing.status = 'active'
         dispatch(saveFencing(data));
       },
-
       error => console.error("Oops, snapshot failed", error)
     );
-
     RNFS.writeFile(path, JSON.stringify(editing), 'utf8').
       then(success => {
         console.log('File written successfully!', path);
@@ -246,6 +257,8 @@ const Area = () => {
   // remove point from polygon
   const mapOptions = {
     scrollEnabled: true,
+    zoomEnabled: true,
+
   };
   if (editing) {
     mapOptions.scrollEnabled = true;
@@ -336,22 +349,22 @@ const Area = () => {
           zoomTapEnabled={true}
           onPress={e => onPress(e)}
           region={{
-            latitude: lat,
-            longitude: lng,
+            latitude: regionlat,
+            longitude: regionlng,
             latitudeDelta: latitudeDelta,
             longitudeDelta: longitudeDelta,
           }}
           onRegionChangeComplete={e => {
             setLongitudeDelta(e.longitudeDelta)
             setLatitudeDelta(e.latitudeDelta)
-            setLat(e.latitude)
-            setLng(e.longitude)
+            setRegionLat(e.latitude)
+            setRegionLng(e.longitude)
           }}
           {...mapOptions}>
           <Marker
             coordinate={{
-              latitude: coordinates.coords.latitude,
-              longitude: coordinates.coords.longitude,
+              latitude: lat,
+              longitude: lng,
             }}
             title="My Location"
             description="This is where I am"
@@ -359,8 +372,8 @@ const Area = () => {
           />
           <Marker
             coordinate={{
-              latitude: coordinates.coords.latitude + 0.00007565,
-              longitude: coordinates.coords.longitude + 0.00019599,
+              latitude: lat + 0.00007565,
+              longitude: lng + 0.00019599,
             }}
             title="Robots Location"
             description="This is where Robot is"
@@ -369,7 +382,7 @@ const Area = () => {
           />
           {polygons.map(polygon => (
             <Polygon
-              key={polygon.id}
+              key={polygon?.id}
               coordinates={polygon.coordinates}
               holes={polygon.holes}
               strokeColor="rgba(30,0,255,1)"
@@ -378,7 +391,7 @@ const Area = () => {
               pointerEvents="box-only"
             />
           ))}
-          {polygons && console.log('Polygons', polygons)}
+
           {editing && (
             <Polygon
               key={editing.id}

@@ -26,7 +26,7 @@ import { useSelector } from 'react-redux';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0012;
+const LATITUDE_DELTA = 0.000012;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const initialPosition = {
     coords: {
@@ -42,85 +42,12 @@ const initialPosition = {
     provider: 'fused',
     timestamp: 1651872653900,
 };
-const points = [
-    { latitude: 6.83646681, longitude: 79.77121907, weight: 1 },
-    { latitude: 6.82776681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.82176681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.83176681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.83976681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.83076681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.82776681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.82076681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.82076681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.81076681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.83276681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.81976681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.867319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.865319, weight: 1 },
-    { latitude: 6.83646681, longitude: 79.77121907, weight: 1 },
-    { latitude: 6.82776681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.82176681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.83176681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.83976681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.83076681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.82776681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.82076681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.82076681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.81076681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.83276681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.81976681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.867319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.865319, weight: 1 },
-    { latitude: 6.84076681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.83646681, longitude: 79.77121907, weight: 1 },
-    { latitude: 6.82776681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.82176681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.83176681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.83976681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.83076681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.82776681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.82076681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.82076681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.81076681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.83276681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.81976681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.867319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.865319, weight: 1 },
-    { latitude: 6.84076681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.841776681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.83646681, longitude: 79.77121907, weight: 1 },
-    { latitude: 6.82776681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.82176681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.83176681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.83976681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.83076681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.82776681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.82076681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.82076681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.81076681, longitude: 79.861319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.83276681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.81976681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.867319, weight: 1 },
-    { latitude: 6.83776681, longitude: 79.865319, weight: 1 },
-    { latitude: 6.84076681, longitude: 79.871319, weight: 1 },
-    { latitude: 6.841776681, longitude: 79.869319, weight: 1 },
-    { latitude: 6.84076681, longitude: 79.871319, weight: 1 },
 
-];
 const Area = () => {
     const myFencing = useSelector(state => state.fencing.data);
     const [permission, setPermission] = useState('');
     const [coordinates, setCoordinates] = useState(initialPosition);
     //getting permission if no yet got
-    console.table("points", points)
     const getPermission = async () => {
         if (Platform.OS === 'android') {
             try {
@@ -203,12 +130,17 @@ const Area = () => {
             //Getting location
             getCurrentLocation();
         }
+
+        return () => {
+            Geolocation.stopObserving()
+        }
     }, [permission]);
 
 
     // remove point from polygon
     const mapOptions = {
         scrollEnabled: true,
+        zoomEnabled: true,
     };
 
     return (
@@ -248,9 +180,9 @@ const Area = () => {
                 />
 
                 <Heatmap
-                    points={[{ latitude: coordinates.coords.latitude + 0.00079565, longitude: coordinates.coords.longitude + 0.00019599, weight: 1 }]}
+                    points={[{ latitude: coordinates.coords.latitude + 0.00079565, longitude: coordinates.coords.longitude + 0.00019599, weight: 5 }]}
                     opacity={0.7}
-                    radius={80}
+                    radius={50}
                     maxIntensity={20}
                     gradientSmoothing={0.2}
                     heatmapMode={"POINTS_DENSITY"}

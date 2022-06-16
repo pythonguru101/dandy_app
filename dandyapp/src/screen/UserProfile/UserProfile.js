@@ -21,7 +21,7 @@ const UserProfile = () => {
         count={deviceCount.length}
       />
       {data.map(item =>
-        <TouchableOpacity style={styles.bubble} onPress={() => navigation.navigate(item.route)}>
+        <TouchableOpacity key={item.id} style={styles.bubble} onPress={() => navigation.navigate(item.route)}>
           <View style={styles.notificationBox}>
             <Text style={styles.name}>{item.description}</Text>
           </View>

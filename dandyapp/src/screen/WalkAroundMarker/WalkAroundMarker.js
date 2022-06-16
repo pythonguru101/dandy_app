@@ -1,19 +1,6 @@
-// import { View, Text } from 'react-native'
-// import React from 'react'
-
-// const WalkAroundMarker = () => {
-//   return (
-//     <View>
-//       <Text>WalkAroundMarker</Text>
-//     </View>
-//   )
-// }
-
-// export default WalkAroundMarker
-
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  StyleSheet, 
+  StyleSheet,
   Text,
   View,
   TouchableOpacity,
@@ -24,9 +11,9 @@ import {
   Modal,
   Dimensions
 } from 'react-native';
-import MapView, {Marker,PROVIDER_GOOGLE,MAP_TYPES,Polyline} from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE, MAP_TYPES, Polyline } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-import  {Formik}  from 'formik';
+import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveFencing } from '../../redux/Actions';
 import { setFencingCoords } from '../../services/services';
@@ -48,48 +35,44 @@ const WalkAroundMarker = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     Geolocation.getCurrentPosition(
-        position => {
+      position => {
         const crd = position.coords;
-         setPosition({
-                 latitude: crd.latitude,
-                 longitude: crd.longitude,
-                 latitudeDelta:LATITUDE_DELTA,
-                 longitudeDelta: LONGITUDE_DELTA,
-                });
-            console.log("first position", position);
-        },
-        error => {
-          // See error code charts below.
-          console.log(error.code, error.message);
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-      );
+        setPosition({
+          latitude: crd.latitude,
+          longitude: crd.longitude,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
+        });
+        console.log("first position", position);
+      },
+      error => {
+        // See error code charts below.
+        console.log(error.code, error.message);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+    );
 
-    
-
-console.log(" position", position);
-console.log("coords", coordinates);
-
+    return () => {
+      Geolocation.stopObserving();
+    }
   }, []);
 
 
 
-
- 
-  switch (tracking) {
-    case tracking:true
-    Geolocation.watchPosition(
+  const startTrackingFunction = async () => {
+    await Geolocation.watchPosition(
       position => {
-      const crd = position.coords;
-      // markCoords.push({latitude:crd.latitude,longitude: crd.longitude})
-      setPosition({
-          latitude: crd.latitude,
-          longitude: crd.longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-         });
-         setCoordinates([...coordinates, {latitude:crd.latitude,longitude: crd.longitude}])
-        // console.log("markCoords1", markCoords);
+        const crd = position.coords;
+        // setPosition({
+        //   latitude: crd.latitude,
+        //   longitude: crd.longitude,
+        //   latitudeDelta: LATITUDE_DELTA,
+        //   longitudeDelta: LONGITUDE_DELTA,
+        // });
+        console.log(crd, "crd");
+        setCoordinates([...coordinates, { latitude: crd.latitude, longitude: crd.longitude }]);
+        console.log("coords", coordinates);
+
       },
       error => {
         console.log(error);
@@ -100,199 +83,170 @@ console.log("coords", coordinates);
         timeout: 20000,
         maximumAge: 0,
         distanceFilter: 0,
-      },);
-      break;
-    case tracking:false
-    Geolocation.clearWatch();
-    break;
-  
-    default:
-      break;
-  }
-
-
-
-
-  const startTrackingFunction = () => {
-
-Geolocation.watchPosition(
-      position => {
-      const crd = position.coords;
-    
-      setPosition({
-          latitude: crd.latitude,
-          longitude: crd.longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-         });
-         setCoordinates([...coordinates, {latitude:crd.latitude,longitude: crd.longitude}])
-     
-      },
-      error => {
-        console.log(error);
-      },
-      {
-        showLocationDialog: true,
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 0,
-        distanceFilter: 0,
-      },);
+      });
     setTracking(true);
-    }
-
-    const stopTrackingFunction = () => {
-      Geolocation.clearWatch();
-      setTracking(false);
-      setModalVisible(true);
-    }
-
-
-
-  
-
-
-
-// const startTraking = () => {
-//   console.log("start tracking");
-//   setTracking(true);
-// }
-
-// const stopTracking = () => {
-//   console.log("stop tracking");
-//   setTracking(false);
-//   // setCoordinates(markCoords);
-//   console.log("coords updated", coordinates);
-//   setModalVisible(true);
-// }
-
-const onSubmitFunction = async (values) => {
-  console.log("Values", values.mapName)
-  storeFencing(values.mapName)
-};
-
-const storeFencing =async (mapName) => {
-  console.log("save fencing", mapName);
-  const fencing = {
-    coordinates: coordinates,
-    name: mapName,
-    id: Math.ceil(Math.random()* 100),
-    date:new Date().toDateString(),
-    status : 'active',
-    holes:[]
   }
 
-  await dispatch(saveFencing(fencing));
-  setModalVisible(false);
-  console.log("fencing", fencing);
-}
+
+
+  useEffect(() => {
+    if (tracking) {
+      startTrackingFunction();
+    } else {
+      Geolocation.stopObserving();
+    }
+  }
+    , [tracking, coordinates]);
+
+  const stopTrackingFunction = () => {
+    Geolocation.clearWatch();
+    Geolocation.stopObserving();
+    setTracking(false);
+    setModalVisible(true);
+
+
+
+  }
+
+  // const startTraking = () => {
+  //   console.log("start tracking");
+  //   setTracking(true);
+  // }
+
+  // const stopTracking = () => {
+  //   console.log("stop tracking");
+  //   setTracking(false);
+  //   // setCoordinates(markCoords);
+  //   console.log("coords updated", coordinates);
+  //   setModalVisible(true);
+  // }
+
+  const onSubmitFunction = async (values) => {
+    console.log("Values", values.mapName)
+    storeFencing(values.mapName).then(() => {
+      setModalVisible(false);
+      setCoordinates([]);
+    });
+
+
+  };
+
+  const storeFencing = async (mapName) => {
+    console.log("save fencing", mapName);
+    const fencing = {
+      coordinates: coordinates,
+      name: mapName,
+      id: Math.ceil(Math.random() * 100),
+      date: new Date().toDateString(),
+      status: 'active',
+      holes: []
+    }
+
+    await dispatch(saveFencing(fencing));
+    console.log("fencing", fencing);
+  }
 
 
 
   return (
     <View style={styles.container}>
-       <KeyboardAvoidingView>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              Alert.alert('Modal has been closed.');
-              setModalVisible(!modalVisible);
-            }}>
-            <View style={styles.centeredView}>
-              <Formik
-                initialValues={{ mapName: '' }}
-                onSubmit={values => {
-                  onSubmitFunction(values);
-                  ToastAndroid.show(
-                    `Saved ${values.mapName}`,
-                    ToastAndroid.TOP,
-                  );
-                  setTimeout(() => {
-                    setModalVisible(!modalVisible);
-                  }, 1000);
-                }}>
-                {({ handleChange, handleBlur, handleSubmit, values }) => (
-                  <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Save Selected Area</Text>
-                    {/* {error && <Text style={{ color: "red" }}>Couldn't connect to wifi</Text>} */}
-                    <TextInput
-                      style={styles.inputModal}
-                      onChangeText={handleChange('mapName')}
-                      onBlur={handleBlur('mapName')}
-                      value={values.ssid}
-                      placeholder="Name"
-                      keyboardType="default"
-                    />
+      <KeyboardAvoidingView>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <Formik
+              initialValues={{ mapName: '' }}
+              onSubmit={values => {
+                onSubmitFunction(values);
+                ToastAndroid.show(
+                  `Saved ${values.mapName}`,
+                  ToastAndroid.TOP,
+                );
+                setTimeout(() => {
+                  setModalVisible(!modalVisible);
+                }, 1000);
+              }}>
+              {({ handleChange, handleBlur, handleSubmit, values }) => (
+                <View style={styles.modalView}>
+                  <Text style={styles.modalText}>Save Selected Area</Text>
+                  {/* {error && <Text style={{ color: "red" }}>Couldn't connect to wifi</Text>} */}
+                  <TextInput
+                    style={styles.inputModal}
+                    onChangeText={handleChange('mapName')}
+                    onBlur={handleBlur('mapName')}
+                    value={values.ssid}
+                    placeholder="Name"
+                    keyboardType="default"
+                  />
 
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <Pressable
-                        style={[styles.buttonModal, styles.buttonConnectModal]}
-                        onPress={handleSubmit}>
-                        <Text style={styles.textStyleModal}>Save</Text>
-                      </Pressable>
-                      <Pressable
-                        style={[styles.buttonModal, styles.buttonCancelModal]}
-                        onPress={() => {setModalVisible(!modalVisible);
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <Pressable
+                      style={[styles.buttonModal, styles.buttonConnectModal]}
+                      onPress={handleSubmit}>
+                      <Text style={styles.textStyleModal}>Save</Text>
+                    </Pressable>
+                    <Pressable
+                      style={[styles.buttonModal, styles.buttonCancelModal]}
+                      onPress={() => {
+                        setModalVisible(!modalVisible);
                         setTracking(false);
-                        }}>
-                        <Text style={styles.textStyleModal}>Cancel</Text>
-                      </Pressable>
-                    </View>
+                      }}>
+                      <Text style={styles.textStyleModal}>Cancel</Text>
+                    </Pressable>
                   </View>
-                )}
-              </Formik>
-            </View>
-          </Modal>
-        </KeyboardAvoidingView>
-    <MapView
-      provider={PROVIDER_GOOGLE}
-      style={styles.map}
-      initialRegion={position}
-      region={position}
-      showsUserLocation={true}
-      // showsMyLocationButton={true}
-      mapType={MAP_TYPES.SATELLITE}
-      followsUserLocation={true}
-      showsCompass={true}
-      scrollEnabled={true}
-      zoomEnabled={true}
-      maxZoomLevel={20}
-      pitchEnabled={true}
-      rotateEnabled={true}>
-       {/* <Marker
-       title='Yor are here'
-      //  description='This is a description'
-       coordinate={position}
-       on
-       /> */}
-<Polyline
-  coordinates={coordinates}
-  strokeColor="#0096FF"
-  strokeWidth={2}
-/>
-
-       </MapView>
-
-       <View style={styles.buttonContainerMain}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={()=>{tracking?stopTrackingFunction():startTrackingFunction()}}
-              style={[styles.bubble, styles.button]}>
-              <Text style={styles.buttonText}>{tracking?"Stop":"Start"}</Text>
-            </TouchableOpacity>
-         
+                </View>
+              )}
+            </Formik>
           </View>
-         
+        </Modal>
+      </KeyboardAvoidingView>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        style={styles.map}
+        initialRegion={position}
+        region={position}
+        showsUserLocation={true}
+        mapType={MAP_TYPES.SATELLITE}
+        followsUserLocation={true}
+        showsCompass={true}
+        scrollEnabled={true}
+        zoomEnabled={true}
+        maxZoomLevel={20}
+        pitchEnabled={true}
+        rotateEnabled={true}>
+
+        {coordinates.length > 0 && <Polyline
+          coordinates={coordinates}
+          strokeColor="#0096FF"
+          strokeWidth={2}
+        />}
+
+      </MapView>
+
+      <View style={styles.buttonContainerMain}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => { tracking ? stopTrackingFunction() : startTrackingFunction() }}
+            style={[styles.bubble, styles.button]}>
+            <Text style={styles.buttonText}>{tracking ? "Stop" : "Start"}</Text>
+          </TouchableOpacity>
+
         </View>
 
-       </View>
-  
+      </View>
+
+    </View>
+
   );
 };
 

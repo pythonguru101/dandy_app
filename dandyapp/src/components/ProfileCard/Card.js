@@ -8,8 +8,8 @@ const ProfileCard = ({ hours, milage, count }) => {
             <View style={styles.card} >
                 <Image style={styles.image} source={Dandy} />
                 <View style={styles.cardContent}>
-                    <Text style={styles.name}>Total Hours of Cleaning : {hours} Hours </Text>
-                    <Text style={styles.name}>Total Area of Cleaning : {milage} Meters </Text>
+                    <Text style={styles.name}>Total Cleaning : {hours} Hrs </Text>
+                    <Text style={styles.name}>Total Area : {milage} Meters </Text>
                     <Text style={styles.name}>Paired Devices : {count} </Text>
 
                     {/* {count && <Text style={styles.count}>Battery:{count}%</Text>} */}
@@ -37,7 +37,8 @@ const styles = StyleSheet.create({
     },
     cardContent: {
         marginLeft: 20,
-        marginTop: 10
+        marginTop: 10,
+        // padding: 10,
     },
     image: {
         width: 120,
