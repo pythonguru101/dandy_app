@@ -18,9 +18,9 @@ import CleanAlert from '../screen/CleanAlert/CleanAlert';
 import WalkAroundMarker from '../screen/WalkAroundMarker/WalkAroundMarker';
 import { useSelector } from 'react-redux';
 import CheckUpdate from '../screen/CheckUpdate/CheckUpdate';
-import AreaSelector from '../screen/AreaSelector/AreaSelector';
-import WalkAround from '../screen/WalkAroundMarker/WalkAround';
-import AreaMap from '../screen/AreaSelector/AreaMap';
+// import AreaSelector from '../screen/AreaSelector/AreaSelector';
+// import WalkAround from '../screen/WalkAroundMarker/WalkAround';
+// import AreaMap from '../screen/AreaSelector/AreaMap';
 import HomeUpdated from '../screen/Home/HomeUpdated';
 
 const Drawer = createDrawerNavigator();
