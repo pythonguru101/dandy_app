@@ -99,6 +99,20 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
+
+public class Version { 
+    private final static int VERSION_BUILD = 0; 
+    private final static int VERSION_MAJOR = 0; 
+    private final static int VERSION_MINOR = 1;
+    public static int getVersionCode() { 
+        return VERSION_BUILD*1000*1000 + VERSION_MAJOR * 1000 + VERSION_MINOR; 
+        // return 2002009;
+    }
+
+    public static String getVersionName() { 
+        return VERSION_BUILD + "." + VERSION_MAJOR + "." + VERSION_MINOR; 
+    } 
+}
 /**
  * The preferred build flavor of JavaScriptCore.
  *
@@ -131,15 +145,15 @@ def reactNativeArchitectures() {
 
 android {
     ndkVersion rootProject.ext.ndkVersion
-
+    archivesBaseName = "Dandy " + Version.getVersionName()
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
         applicationId "com.dandyapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode Version.getVersionCode()
+        versionName Version.getVersionName()
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
