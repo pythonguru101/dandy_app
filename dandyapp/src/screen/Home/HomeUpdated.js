@@ -62,7 +62,7 @@ const Home = () => {
         console.log("pass", pass)
         console.log("ssid", id)
         if (Platform.OS === 'android') {
-            WifiManager.connectToProtectedSSID(id, pass, false)
+            WifiManager.connectToProtectedSSID(id, "dandypassword", false)
                 .then(wifi => {
                     setWifiConnecting(false);
                     setWifiConnected(true);
@@ -79,7 +79,7 @@ const Home = () => {
                 });
         }
         else {
-            WifiManager.connectToProtectedSSIDPrefix("dandy_robot", "balerjibon", false).then(wifi => {
+            WifiManager.connectToProtectedSSIDPrefix(id, "dandypassword", false).then(wifi => {
                 setWifiConnecting(false);
                 setWifiConnected(true);
                 getWifiStatus()
