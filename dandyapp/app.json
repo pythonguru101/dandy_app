@@ -5,7 +5,7 @@
     [
       "react-native-wifi-reborn",
       {
-        "fineLocationPermission": false
+        "fineLocationPermission": true
       }
     ]
   ]

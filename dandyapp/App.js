@@ -8,20 +8,14 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './src/redux/store'
 import { enableLatestRenderer } from 'react-native-maps';
 import { createServer } from 'miragejs';
-import RNCalendarEvents from 'react-native-calendar-events';
+
 enableLatestRenderer();
 
 
 
 function App() {
 
-  React.useEffect(() => {
-    RNCalendarEvents.requestPermissions().then((res) => {
-     console.log(res)
-    }).catch(() => {
-      console.log('Not Granted');
-    });
-  }, []);
+
 
   return (
     <>

@@ -18,7 +18,10 @@ import CleanAlert from '../screen/CleanAlert/CleanAlert';
 import WalkAroundMarker from '../screen/WalkAroundMarker/WalkAroundMarker';
 import { useSelector } from 'react-redux';
 import CheckUpdate from '../screen/CheckUpdate/CheckUpdate';
-
+import AreaSelector from '../screen/AreaSelector/AreaSelector';
+import WalkAround from '../screen/WalkAroundMarker/WalkAround';
+import AreaMap from '../screen/AreaSelector/AreaMap';
+import HomeUpdated from '../screen/Home/HomeUpdated';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -79,7 +82,7 @@ const ProfileStack = () => (
                 fontWeight: 'bold',
             },
         }} />
-        
+
     </Stack.Navigator>
 );
 
@@ -150,7 +153,7 @@ export default function App() {
 
     return (
         <Drawer.Navigator initialRouteName="Home">
-            <Drawer.Screen name="Home" component={Home}
+            <Drawer.Screen name="Home" component={HomeUpdated}
                 options={{
                     drawerIcon: ({ tintColor }) => (
                         <Icon name="home" size={20} color={tintColor} />
@@ -166,9 +169,9 @@ export default function App() {
                 drawerIcon: ({ tintColor }) => (
                     <Icon name="robot" size={24} color={tintColor} />)
             }} /> */}
-           
+
             {/* {currentConection.includes("dandy") && */}
-             <Drawer.Screen name="Map" component={Area} options={{
+            <Drawer.Screen name="Map" component={Area} options={{
                 title: 'Map',
                 drawerIcon: ({ tintColor }) => (
                     <Icon name="map-marked-alt" size={24} color={tintColor} />)
@@ -191,7 +194,7 @@ export default function App() {
                 drawerIcon: ({ tintColor }) => (
                     <Icon name="exclamation-circle" size={24} color={tintColor} />)
             }} />
-             <Drawer.Screen name="CleanAlert" component={CleanAlert} options={{
+            <Drawer.Screen name="CleanAlert" component={CleanAlert} options={{
                 title: 'Clean Alert',
                 headerShown: true,
                 drawerIcon: ({ tintColor }) => (
@@ -203,7 +206,7 @@ export default function App() {
                 drawerIcon: ({ tintColor }) => (
                     <Icon name="map-marker-alt" size={24} color={tintColor} />)
             }} />
-             <Drawer.Screen name="SettingsStack" component={SettingsStack}
+            <Drawer.Screen name="SettingsStack" component={SettingsStack}
                 options={{
                     title: 'Settings',
                     headerShown: false,

@@ -17,7 +17,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setSaveSchedule, deleteSchedule } from '../../redux/Actions/RobotSchedule.action'
-import RNCalendarEvents from 'react-native-calendar-events';
+// import RNCalendarEvents from 'react-native-calendar-events';
 import Geolocation from 'react-native-geolocation-service';
 import Notifications from '../../../Notification';
 
@@ -96,22 +96,22 @@ const CleanAlert = () => {
 
   const onSave = () => {
 
-    RNCalendarEvents.saveEvent(name, {
-      location: 'Dandy Schedule',
-      notes: name,
-      startDate: date.toISOString(),
-      endDate: date.toISOString(),
-      alarms: [
-        {
-          date: date.toISOString(),
-          method: 'alert',
-        },
-      ],
-    }).then(id => {
-      console.log('Successfully added', id);
-    }).catch(error => {
-      console.log('Failed to add', error);
-    });
+    // RNCalendarEvents.saveEvent(name, {
+    //   location: 'Dandy Schedule',
+    //   notes: name,
+    //   startDate: date.toISOString(),
+    //   endDate: date.toISOString(),
+    //   alarms: [
+    //     {
+    //       date: date.toISOString(),
+    //       method: 'alert',
+    //     },
+    //   ],
+    // }).then(id => {
+    //   console.log('Successfully added', id);
+    // }).catch(error => {
+    //   console.log('Failed to add', error);
+    // });
     if (name.length > 0) {
       dispatch(setSaveSchedule({ id: Math.ceil(Math.random() * 99999), name: name, time: `${timeExtract(date)}`, date: `${date.toLocaleDateString()}` }));
       setModalVisible(false);
@@ -261,7 +261,6 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     color: "#000",
     fontWeight: "bold",
-    FontFace: "sans-serif-condensed",
     textAlignVertical: "center",
   },
 
