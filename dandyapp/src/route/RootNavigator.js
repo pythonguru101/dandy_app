@@ -242,12 +242,7 @@ export default function App() {
                     drawerIcon: ({ tintColor }) => (
                         <Icon name="question-circle" size={24} color={tintColor} />)
                 }} />
-                <Drawer.Screen name="OnBoarding" component={OnboardingScreen} options={{
-                    title: 'On Boarding',
-                    headerShown: true,
-                    drawerIcon: ({ tintColor }) => (
-                        <Icon name="question-circle" size={24} color={tintColor} />)
-                }} />
+
             </Drawer.Navigator>
         );
     }
