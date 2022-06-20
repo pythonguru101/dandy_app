@@ -20,10 +20,7 @@ export const getdeviceslocation = () => {
 
 
 export const checkSoftwareUpdate = () => {
-  return setInterval(() => {
-    return true;
-  }
-    , 1000000);
+    return axios.get(baseUrl + "/check-software-update");
 
 }
 

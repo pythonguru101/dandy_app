@@ -7,6 +7,7 @@ import NetworkReducer from './networkConnection';
 import FencingReducer from './areaReducer';
 import RobotReducer from './robotReducer';
 import RobotScheduleReducer from './robotSchedule.reducer';
+import OnboardingReducer from './onBoardingReducer';
 
 export default combineReducers({
   count: CountReducer,
@@ -14,5 +15,6 @@ export default combineReducers({
   network: NetworkReducer,
   fencing: FencingReducer,
   robot: RobotReducer,
-  schedule: RobotScheduleReducer
+  schedule: RobotScheduleReducer,
+  onboarding: OnboardingReducer,
 });

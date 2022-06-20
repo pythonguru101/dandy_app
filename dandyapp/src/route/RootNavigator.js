@@ -21,7 +21,11 @@ import CheckUpdate from '../screen/CheckUpdate/CheckUpdate';
 // import AreaSelector from '../screen/AreaSelector/AreaSelector';
 // import WalkAround from '../screen/WalkAroundMarker/WalkAround';
 // import AreaMap from '../screen/AreaSelector/AreaMap';
+import OrderMedia from '../screen/OrderMedia/OrderMedia';
+import Feedback from '../screen/Feedback/Feedback';
+import Support from '../screen/Support/Support';
 import HomeUpdated from '../screen/Home/HomeUpdated';
+import OnboardingScreen from '../screen/Onboarding/Onboarding';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -147,74 +151,105 @@ const SettingsStack = () => (
 )
 
 
+
 export default function App() {
 
     const currentConection = useSelector(state => state.connection.wifi);
-
-    return (
-        <Drawer.Navigator initialRouteName="Home">
-            <Drawer.Screen name="Home" component={HomeUpdated}
-                options={{
-                    drawerIcon: ({ tintColor }) => (
-                        <Icon name="home" size={20} color={tintColor} />
-                    ),
-                    headerLeft: () => (
-                        <DrawerToggleButton />
-                    )
-                }}
-            />
-            {/* <Drawer.Screen name="Devices" component={DeviceStack} options={{
+    const onboarding = useSelector(state => state.onboarding.onboarding);
+    console.log("onboarding", onboarding);
+    if (onboarding) {
+        return <OnboardingScreen />
+    } else {
+        return (
+            <Drawer.Navigator initialRouteName="Home">
+                <Drawer.Screen name="Home" component={HomeUpdated}
+                    options={{
+                        drawerIcon: ({ tintColor }) => (
+                            <Icon name="home" size={20} color={tintColor} />
+                        ),
+                        headerLeft: () => (
+                            <DrawerToggleButton />
+                        )
+                    }}
+                />
+                {/* <Drawer.Screen name="Devices" component={DeviceStack} options={{
                 title: 'Connected Device',
                 headerShown: false,
                 drawerIcon: ({ tintColor }) => (
                     <Icon name="robot" size={24} color={tintColor} />)
             }} /> */}
 
-            {/* {currentConection.includes("dandy") && */}
-            <Drawer.Screen name="Map" component={Area} options={{
-                title: 'Map',
-                drawerIcon: ({ tintColor }) => (
-                    <Icon name="map-marked-alt" size={24} color={tintColor} />)
-            }} />
-            {/* } */}
-            <Drawer.Screen name="HeatMap" component={HeatMap} options={{
-                title: 'Heat Map',
-                drawerIcon: ({ tintColor }) => (
-                    <Icon name="fire" size={24} color={tintColor} />)
-            }} />
-            <Drawer.Screen name="UserProfile" component={ProfileStack} options={{
-                title: 'User Profile',
-                headerShown: false,
-                drawerIcon: ({ tintColor }) => (
-                    <Icon name="user" size={24} color={tintColor} />)
-            }} />
-            <Drawer.Screen name="RobotStatus" component={RobotStatus} options={{
-                title: 'Robot Status',
-                headerShown: true,
-                drawerIcon: ({ tintColor }) => (
-                    <Icon name="exclamation-circle" size={24} color={tintColor} />)
-            }} />
-            <Drawer.Screen name="CleanAlert" component={CleanAlert} options={{
-                title: 'Clean Alert',
-                headerShown: true,
-                drawerIcon: ({ tintColor }) => (
-                    <Icon name="trash-restore-alt" size={24} color={tintColor} />)
-            }} />
-            <Drawer.Screen name="WalkAroundMarker" component={WalkAroundMarker} options={{
-                title: 'Walk Around Marker',
-                headerShown: true,
-                drawerIcon: ({ tintColor }) => (
-                    <Icon name="map-marker-alt" size={24} color={tintColor} />)
-            }} />
-            <Drawer.Screen name="SettingsStack" component={SettingsStack}
-                options={{
-                    title: 'Settings',
+                {/* {currentConection.includes("dandy") && */}
+                <Drawer.Screen name="Map" component={Area} options={{
+                    title: 'Map',
+                    drawerIcon: ({ tintColor }) => (
+                        <Icon name="map-marked-alt" size={24} color={tintColor} />)
+                }} />
+                {/* } */}
+                <Drawer.Screen name="HeatMap" component={HeatMap} options={{
+                    title: 'Heat Map',
+                    drawerIcon: ({ tintColor }) => (
+                        <Icon name="fire" size={24} color={tintColor} />)
+                }} />
+                <Drawer.Screen name="UserProfile" component={ProfileStack} options={{
+                    title: 'User Profile',
                     headerShown: false,
                     drawerIcon: ({ tintColor }) => (
-                        <Icon name="cog" size={24} color={tintColor} />)
-                }}
-            />
-        </Drawer.Navigator>
+                        <Icon name="user" size={24} color={tintColor} />)
+                }} />
+                <Drawer.Screen name="RobotStatus" component={RobotStatus} options={{
+                    title: 'Robot Status',
+                    headerShown: true,
+                    drawerIcon: ({ tintColor }) => (
+                        <Icon name="exclamation-circle" size={24} color={tintColor} />)
+                }} />
+                <Drawer.Screen name="CleanAlert" component={CleanAlert} options={{
+                    title: 'Clean Alert',
+                    headerShown: true,
+                    drawerIcon: ({ tintColor }) => (
+                        <Icon name="trash-restore-alt" size={24} color={tintColor} />)
+                }} />
+                <Drawer.Screen name="WalkAroundMarker" component={WalkAroundMarker} options={{
+                    title: 'Walk Around Marker',
+                    headerShown: true,
+                    drawerIcon: ({ tintColor }) => (
+                        <Icon name="map-marker-alt" size={24} color={tintColor} />)
+                }} />
+                <Drawer.Screen name="SettingsStack" component={SettingsStack}
+                    options={{
+                        title: 'Settings',
+                        headerShown: false,
+                        drawerIcon: ({ tintColor }) => (
+                            <Icon name="cog" size={24} color={tintColor} />)
+                    }}
+                />
 
-    );
+                <Drawer.Screen name="OrderMedia" component={OrderMedia} options={{
+                    title: 'Order Media',
+                    headerShown: true,
+                    drawerIcon: ({ tintColor }) => (
+                        <Icon name="file-upload" size={24} color={tintColor} />)
+                }} />
+                <Drawer.Screen name="Feedback" component={Feedback} options={{
+                    title: 'Feedback',
+                    headerShown: true,
+                    drawerIcon: ({ tintColor }) => (
+                        <Icon name="comment" size={24} color={tintColor} />)
+                }} />
+                <Drawer.Screen name="Support" component={Support} options={{
+                    title: 'Support',
+                    headerShown: true,
+                    drawerIcon: ({ tintColor }) => (
+                        <Icon name="question-circle" size={24} color={tintColor} />)
+                }} />
+                <Drawer.Screen name="OnBoarding" component={OnboardingScreen} options={{
+                    title: 'On Boarding',
+                    headerShown: true,
+                    drawerIcon: ({ tintColor }) => (
+                        <Icon name="question-circle" size={24} color={tintColor} />)
+                }} />
+            </Drawer.Navigator>
+        );
+    }
+
 }

@@ -4,6 +4,7 @@ import {
   CONNECT_TO_WIFI,
   SAVE_FENCING,
   GET_ROBOT_LOCATION,
+  SET_ONBOARDING,
 
 } from '../ActionTypes';
 import axios from 'axios';
@@ -32,7 +33,7 @@ export const connectToWifi = (data) => {
 }
 
 export const saveFencing = (data) => {
-  console.log("save",data)
+  console.log("save", data)
   return {
     type: SAVE_FENCING,
     payload: data
@@ -65,4 +66,8 @@ export function getRobotData() {
   };
 }
 
-
+export const setOnboarding = () => {
+  return {
+    type: SET_ONBOARDING,
+  };
+}
