@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-const baseUrl = 'http://dandy_robot.local:5000';
+const baseUrl = 'http://dandy-robot-5.local:5000';
 
 export const setWifiCreds = (value) => {
     console.log("Set Wifi cred", value);
@@ -20,7 +20,11 @@ export const getdeviceslocation = () => {
 
 
 export const checkSoftwareUpdate = () => {
-    return axios.get(baseUrl + "/check-software-update");
+    return axios.get(baseUrl + "/check-update");
 
+}
+
+export const startUpdate = (value) => {
+    return axios.post(baseUrl + "/update-software", value)
 }
 
