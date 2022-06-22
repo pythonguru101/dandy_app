@@ -18,10 +18,10 @@ export const connectedTo = (ssid) => {
   };
 }
 
-export const currentConnection = (cname) => {
+export const currentConnection = (cname, serial) => {
   return {
     type: WIFI_STATUS,
-    payload: cname
+    payload: { cname, serial }
   };
 };
 
@@ -53,10 +53,10 @@ export function setRobotData(data) {
 
 }
 
-export function getRobotData() {
+export function getRobotData(serialNo) {
   return async (dispatch) => {
     try {
-      const apiReq = (await getdeviceslocation()).data
+      const apiReq = (await getdeviceslocation(serialNo)).data
       console.log("actions api", apiReq)
       await dispatch(setRobotData(apiReq));
       return apiReq || [];

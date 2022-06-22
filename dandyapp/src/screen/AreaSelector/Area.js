@@ -50,6 +50,7 @@ const initialPosition = {
 };
 const path = `/storage/emulated/0/Android/data/com.dandyapp/cache` + `/${(Math.floor(Math.random() * 999999) + 1).toString()}.json`;
 const Area = () => {
+  const serialNo = useSelector(state => state.connection.serialNo);
   const [polygons, setPolygons] = useState([]);
   const [editing, setEditing] = useState(null);
   const [latitudeDelta, setLatitudeDelta] = useState(LATITUDE_DELTA);
@@ -167,7 +168,7 @@ const Area = () => {
     setEditing(null);
     setCreatingHole(false);
     console.log('info', polygons, editing, creatingHole);
-    setFencingCoords(editing)
+    setFencingCoords(serialNo, editing)
       .then(res => { ToastAndroid.show('Fencing coordinates saved', ToastAndroid.LONG) })
       .catch(err => { ToastAndroid.show('Fencing coordinates not saved', ToastAndroid.LONG) });
     captureScreen({

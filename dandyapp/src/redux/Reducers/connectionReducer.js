@@ -1,11 +1,12 @@
 import {
-  WIFI_STATUS
+  WIFI_STATUS,
 } from '../ActionTypes';
 
 const initialState = {
   loading: true,
   wifi: "",
   connectionStatus: false,
+  seralNo: "",
 };
 
 const ConnectionReducer = (state = initialState, action) => {
@@ -14,8 +15,9 @@ const ConnectionReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        wifi: action.payload,
+        wifi: action.payload.cname,
         connectionStatus: true,
+        seralNo: action.payload.serial,
       };
     default:
       return state;

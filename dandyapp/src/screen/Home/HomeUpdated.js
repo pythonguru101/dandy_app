@@ -31,6 +31,7 @@ const Home = () => {
 
     const dispatch = useDispatch();
     const current_connection = useSelector(state => state.connection);
+    const serialNo = useSelector(state => state.connection.seralNo);
     const robotInfo = useSelector(state => state.connection);
     const networkInfo = useSelector(state => state.network.connectionStatus);
     const navigation = useNavigation();
@@ -55,19 +56,25 @@ const Home = () => {
         });
         return password;
     }
+    const getNumbers = (str) => {
+        return str.replace(/[^0-9]/g, '');
+    }
 
     const connectToWifi = async (id) => {
         setWifiConnecting(true);
-        const pass = await findPassword(id);
-        console.log("pass", pass)
+        // const pass = await findPassword(id);
+        const serial = getNumbers(id);
+        console.log(serial, "serial");
+
+        // console.log("pass", pass)
         console.log("ssid", id)
         if (Platform.OS === 'android') {
-            WifiManager.connectToProtectedSSID(id, "dandypassword", false)
+            WifiManager.connectToProtectedSSID(id, "balerjibon", false)
                 .then(wifi => {
                     setWifiConnecting(false);
                     setWifiConnected(true);
                     getWifiStatus()
-                    dispatch(currentConnection(id))
+                    dispatch(currentConnection(id, serial));
                     setModalVisible(true);
                     console.log("connected to", wifi)
                 })
@@ -228,7 +235,7 @@ const Home = () => {
 
     const onSubmitFunction = async (values) => {
         console.log("Values", values)
-        setWifiCreds(values).then(res => {
+        setWifiCreds(serialNo, values).then(res => {
             console.log("Response", res)
             if (res.status === 200) {
                 setModalVisible(!modalVisible)

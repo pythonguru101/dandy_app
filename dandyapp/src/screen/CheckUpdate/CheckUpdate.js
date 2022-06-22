@@ -12,9 +12,10 @@ import {
   ToastAndroid
 } from 'react-native';
 import { checkSoftwareUpdate, startUpdate } from '../../services/services';
+import { useSelector } from 'react-redux';
 
 const CheckUpdate = () => {
-
+  const seralNo = useSelector(state => state.connection.seralNo);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState();
   const [error, setError] = useState(null);
@@ -24,7 +25,7 @@ const CheckUpdate = () => {
     console.log("checkUpdate");
     setIsLoading(true);
     try {
-      const response = await checkSoftwareUpdate();
+      const response = await checkSoftwareUpdate(seralNo);
       console.log(response.data);
       setStatus(response.data.is_available_update);
 
@@ -37,7 +38,7 @@ const CheckUpdate = () => {
   const startUpdateProcess = async () => {
     setIsLoading(true);
     try {
-      const response = await startUpdate({ is_update_available: true });
+      const response = await startUpdate(seralNo, { is_update_available: true });
       if (response.status == 200) {
         setStatus(false);
         ToastAndroid.show('Update started', ToastAndroid.LONG);
