@@ -10,6 +10,7 @@ import {
     TextInput,
     Pressable
 } from 'react-native'
+import { Input } from 'react-native-elements'
 import React, { useState, useEffect, useCallback } from 'react'
 import WifiManager from "react-native-wifi-reborn";
 import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
@@ -25,6 +26,8 @@ import { getRobotData, connectedTo } from '../../redux/Actions/index';
 import { setRobotData } from '../../redux/Actions/robotActions';
 import { Formik } from 'formik';
 import { setWifiCreds } from '../../services/services'
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
 
 const devicePrefix = 'dandy';
 const Home = () => {
@@ -42,9 +45,10 @@ const Home = () => {
     const [wifiConnected, setWifiConnected] = useState(false);
     const [wifiConnecting, setWifiConnecting] = useState(false);
     const [isWifiEnabled, setIsWifiEnabled] = useState(false);
-    const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(true);
     const [error, setError] = useState(false);
     const [connectionsStatus, setConnectionsStatus] = useState(false);
+    const [passwordShow, setPasswordShow] = useState(false);
 
     //find password for provided ssid
     const findPassword = (ssid) => {
@@ -298,22 +302,32 @@ const Home = () => {
                                 <View style={styles.modalView}>
                                     <Text style={styles.modalText}>Connect To Wifi</Text>
                                     {error && <Text style={{ color: "red" }}>Couldn't connect to wifi</Text>}
-                                    <TextInput
-                                        style={styles.input}
+                                    <Input
+                                        label="SSID"
+                                        value={values.ssid}
                                         onChangeText={handleChange('ssid')}
                                         onBlur={handleBlur('ssid')}
-                                        value={values.ssid}
                                         placeholder="SSID"
+                                        inputContainerStyle={styles.input}
                                         keyboardType="default"
                                     />
-                                    <TextInput
-                                        style={styles.input}
-                                        secureTextEntry={true}
+                                    <Input
+                                        label="Password"
+                                        secureTextEntry={passwordShow ? false : true}
                                         onChangeText={handleChange('password')}
                                         onBlur={handleBlur('password')}
                                         value={values.password}
                                         placeholder="Password"
                                         keyboardType="default"
+                                        rightIcon={
+                                            <Icon
+                                                name={passwordShow ? 'eye-slash' : 'eye'}
+                                                size={15}
+                                                color="black"
+                                                onPress={() => setPasswordShow(!passwordShow)}
+                                            />
+                                        }
+                                        inputContainerStyle={styles.input}
                                     />
                                     <View
                                         style={{
@@ -321,14 +335,14 @@ const Home = () => {
                                             justifyContent: 'space-between',
                                         }}>
                                         <Pressable
-                                            style={[styles.button, styles.buttonConnect]}
-                                            onPress={handleSubmit}>
-                                            <Text style={styles.textStyle}>Connect</Text>
-                                        </Pressable>
-                                        <Pressable
                                             style={[styles.button, styles.buttonCancel]}
                                             onPress={() => setModalVisible(!modalVisible)}>
                                             <Text style={styles.textStyle}>Cancel</Text>
+                                        </Pressable>
+                                        <Pressable
+                                            style={[styles.button, styles.buttonConnect]}
+                                            onPress={handleSubmit}>
+                                            <Text style={styles.textStyle}>Connect</Text>
                                         </Pressable>
                                     </View>
                                 </View>

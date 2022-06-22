@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         margin: 10,
-        borderColor: '#000',
+        // borderColor: '#000',
     },
     modalView: {
         margin: 20,
