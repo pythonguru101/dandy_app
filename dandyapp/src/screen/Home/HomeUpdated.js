@@ -45,7 +45,7 @@ const Home = () => {
     const [wifiConnected, setWifiConnected] = useState(false);
     const [wifiConnecting, setWifiConnecting] = useState(false);
     const [isWifiEnabled, setIsWifiEnabled] = useState(false);
-    const [modalVisible, setModalVisible] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
     const [error, setError] = useState(false);
     const [connectionsStatus, setConnectionsStatus] = useState(false);
     const [passwordShow, setPasswordShow] = useState(false);
@@ -73,7 +73,7 @@ const Home = () => {
         // console.log("pass", pass)
         console.log("ssid", id)
         if (Platform.OS === 'android') {
-            WifiManager.connectToProtectedSSID(id, "balerjibon", false)
+            WifiManager.connectToProtectedSSID(id, "dandypassword", false)
                 .then(wifi => {
                     setWifiConnecting(false);
                     setWifiConnected(true);
