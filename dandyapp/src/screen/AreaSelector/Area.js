@@ -271,11 +271,11 @@ const Area = () => {
   if (!showMap) {
     return (
       <View style={{ flex: 1, backgroundColor: "#f2c041", alignItems: "center" }}>
-        <View style={{ backgroundColor: "white", width: 120, borderRadius: 20, padding: 10, top: "40%" }}>
+        <View style={{ backgroundColor: "white", width: 180, borderRadius: 20, padding: 10, top: "40%" }}>
           <Pressable onPress={() => {
             setShowMap(!showMap)
           }}>
-            <Text style={{ fontSize: 20, fontWeight: "900", textAlign: "center" }}>Open Are Selector</Text>
+            <Text style={{ fontSize: 20, fontWeight: "900", textAlign: "center",color:'#808080' }}>Open Area Selector</Text>
           </Pressable>
         </View>
       </View>

@@ -48,7 +48,7 @@ const ProfileStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#000',
+            headerTintColor: '#e2e2e2',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -59,7 +59,7 @@ const ProfileStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#000',
+            headerTintColor: '#e2e2e2',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -70,7 +70,7 @@ const ProfileStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#000',
+            headerTintColor: '#e2e2e2',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -81,7 +81,7 @@ const ProfileStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#000',
+            headerTintColor: '#e2e2e2',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -98,7 +98,7 @@ const DeviceStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#000',
+            headerTintColor: '#e2e2e2',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -112,7 +112,7 @@ const DeviceStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#000',
+            headerTintColor: '#e2e2e2',
             headerTitleStyle: {
                 fontWeight: 'bold',
             }
@@ -128,7 +128,7 @@ const SettingsStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#000',
+            headerTintColor: '#e2e2e2',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -142,7 +142,7 @@ const SettingsStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#000',
+            headerTintColor: '#e2e2e2',
             headerTitleStyle: {
                 fontWeight: 'bold',
             }
@@ -165,7 +165,7 @@ export default function App() {
                 <Drawer.Screen name="Home" component={HomeUpdated}
                     options={{
                         drawerIcon: ({ tintColor }) => (
-                            <Icon name="home" size={20} color={tintColor} />
+                            <Icon name="home" size={20} color="#808080" />
                         ),
                         headerLeft: () => (
                             <DrawerToggleButton />
@@ -183,44 +183,44 @@ export default function App() {
                 <Drawer.Screen name="Map" component={Area} options={{
                     title: 'Map',
                     drawerIcon: ({ tintColor }) => (
-                        <Icon name="map-marked-alt" size={24} color={tintColor} />)
+                        <Icon name="map-marked-alt" size={24} color="#808080" />)
                 }} />
                 {/* } */}
                 <Drawer.Screen name="HeatMap" component={HeatMap} options={{
                     title: 'Heat Map',
                     drawerIcon: ({ tintColor }) => (
-                        <Icon name="fire" size={24} color={tintColor} />)
+                        <Icon name="fire" size={24} color="#808080" />)
                 }} />
                 <Drawer.Screen name="UserProfile" component={ProfileStack} options={{
                     title: 'User Profile',
                     headerShown: false,
                     drawerIcon: ({ tintColor }) => (
-                        <Icon name="user" size={24} color={tintColor} />)
+                        <Icon name="user" size={24} color="#808080" />)
                 }} />
                 <Drawer.Screen name="RobotStatus" component={RobotStatus} options={{
                     title: 'Robot Status',
                     headerShown: true,
                     drawerIcon: ({ tintColor }) => (
-                        <Icon name="exclamation-circle" size={24} color={tintColor} />)
+                        <Icon name="exclamation-circle" size={24} color="#808080" />)
                 }} />
                 <Drawer.Screen name="CleanAlert" component={CleanAlert} options={{
                     title: 'Clean Alert',
                     headerShown: true,
                     drawerIcon: ({ tintColor }) => (
-                        <Icon name="trash-restore-alt" size={24} color={tintColor} />)
+                        <Icon name="trash-restore-alt" size={24} color="#808080" />)
                 }} />
                 <Drawer.Screen name="WalkAroundMarker" component={WalkAroundMarker} options={{
                     title: 'Walk Around Marker',
                     headerShown: true,
                     drawerIcon: ({ tintColor }) => (
-                        <Icon name="map-marker-alt" size={24} color={tintColor} />)
+                        <Icon name="map-marker-alt" size={24} color="#808080" />)
                 }} />
                 <Drawer.Screen name="SettingsStack" component={SettingsStack}
                     options={{
                         title: 'Settings',
                         headerShown: false,
                         drawerIcon: ({ tintColor }) => (
-                            <Icon name="cog" size={24} color={tintColor} />)
+                            <Icon name="cog" size={24} color="#808080" />)
                     }}
                 />
 
@@ -228,19 +228,19 @@ export default function App() {
                     title: 'Order Media',
                     headerShown: true,
                     drawerIcon: ({ tintColor }) => (
-                        <Icon name="file-upload" size={24} color={tintColor} />)
+                        <Icon name="file-upload" size={24} color="#808080" />)
                 }} />
                 <Drawer.Screen name="Feedback" component={Feedback} options={{
                     title: 'Feedback',
                     headerShown: true,
                     drawerIcon: ({ tintColor }) => (
-                        <Icon name="comment" size={24} color={tintColor} />)
+                        <Icon name="comment" size={24} color="#808080" />)
                 }} />
                 <Drawer.Screen name="Support" component={Support} options={{
                     title: 'Support',
                     headerShown: true,
                     drawerIcon: ({ tintColor }) => (
-                        <Icon name="question-circle" size={24} color={tintColor} />)
+                        <Icon name="question-circle" size={24} color="#808080" />)
                 }} />
 
             </Drawer.Navigator>
