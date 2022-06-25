@@ -25,33 +25,28 @@ const calls = [
 ]
 const CleaningHistory = () => {
     const dataRobots = useSelector(state => state.robot.robots)
-    const renderItem = ({ item }) => {
-        return (
-            <TouchableOpacity>
-                <View style={styles.row}>
-                    <Image source={grasscutter} style={styles.pic} />
-                    <View>
-                        <View style={styles.nameContainer}>
-                            <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.device.name}</Text>
-                            <Text style={styles.mblTxt}>{item.device.connected_ssid}</Text>
-                        </View>
-                        <View style={styles.msgContainer}>
-                            <Text style={item.device.status === "running" ? styles.msgTxt : styles.msgTxt2}>{item.device.status}</Text>
-                        </View>
-                    </View>
-                </View>
-            </TouchableOpacity>
-        );
-    }
+
 
     return (
         <View style={{ flex: 1 }} >
-            <FlatList
-                data={dataRobots}
-                keyExtractor={(item) => {
-                    return item.id;
-                }}
-                renderItem={renderItem} />
+            {
+                dataRobots.map((item, index) =>
+                    <TouchableOpacity key={index}>
+                        <View style={styles.row}>
+                            <Image source={grasscutter} style={styles.pic} />
+                            <View>
+                                <View style={styles.nameContainer}>
+                                    <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.device.name}</Text>
+                                    <Text style={styles.mblTxt}>{item.device.connected_ssid}</Text>
+                                </View>
+                                <View style={styles.msgContainer}>
+                                    <Text style={item.device.status === "running" ? styles.msgTxt : styles.msgTxt2}>{item.device.status}</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                )
+            }
         </View>
     );
 }

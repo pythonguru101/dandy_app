@@ -275,7 +275,7 @@ const Area = () => {
           <Pressable onPress={() => {
             setShowMap(!showMap)
           }}>
-            <Text style={{ fontSize: 20, fontWeight: "900", textAlign: "center",color:'#808080' }}>Open Area Selector</Text>
+            <Text style={{ fontSize: 20, fontWeight: "900", textAlign: "center", color: '#808080' }}>Open Area Selector</Text>
           </Pressable>
         </View>
       </View>

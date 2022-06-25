@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 18,
-    fontWeight: 'regular',
+    // fontWeight: 'regular',
     color: "#000000",
     marginLeft: 30,
     //   alignSelf: 'center'
