@@ -6,7 +6,7 @@ const initialState = {
   loading: true,
   wifi: "",
   connectionStatus: false,
-  seralNo: "",
+  seralNo: "1",
 };
 
 const ConnectionReducer = (state = initialState, action) => {
