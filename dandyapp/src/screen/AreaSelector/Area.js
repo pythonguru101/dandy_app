@@ -389,7 +389,6 @@ const Area = () => {
               strokeColor="rgba(30,0,255,1)"
               fillColor="rgba(0,0,255,0.5)"
               strokeWidth={2}
-              pointerEvents="box-only"
             />
           ))}
 

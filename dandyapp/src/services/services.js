@@ -3,6 +3,10 @@ import axios from 'axios';
 
 // const baseUrl = 'http://127.0.0.1:';
 
+// export const pingToServer = (serialNo) => {
+//     return axios.get(`${baseUrl}` + serialNo + '/');
+// }
+
 // export const setWifiCreds = (serialNo, value) => {
 //     console.log("Set Wifi cred", value);
 //     return axios.post(baseUrl + serialNo + '/connect-with-robot', { ssid: value.ssid, password: value.password });
@@ -13,17 +17,17 @@ import axios from 'axios';
 //     return axios.post(baseUrl + serialNo + '/robot-location-fencing', value);
 // };
 
-// export const getdeviceslocation = (serialNo,) => {
+// export const getdeviceslocation = (serialNo) => {
 //     return axios.get(baseUrl + serialNo + "/get-robot-current-location");
 // }
 
 
-// export const checkSoftwareUpdate = (serialNo,) => {
+// export const checkSoftwareUpdate = (serialNo) => {
 //     return axios.get(baseUrl + serialNo + "/check-update");
 
 // }
 
-// export const startUpdate = (serialNo, value) => {
+// export const startDownloadingUpdate = (serialNo, value) => {
 //     return axios.post(baseUrl + serialNo + "/update-software", value)
 // }
 

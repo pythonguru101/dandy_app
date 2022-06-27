@@ -11,46 +11,99 @@ import {
   ActivityIndicator,
   ToastAndroid
 } from 'react-native';
-import { checkSoftwareUpdate, startUpdate } from '../../services/services';
+import { checkSoftwareUpdate, startDownloadingUpdate } from '../../services/services';
 import { useSelector } from 'react-redux';
+
+const ButtonComponent = ({ onPress, isLoading, textNext, textPrev }) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <View
+        style={{
+          ...styles.button,
+          backgroundColor: isLoading ? "#4caf50" : "#8bc84a",
+        }}
+      >
+        {isLoading && <ActivityIndicator size="large" color="yellow" />}
+        <Text style={styles.buttonText}>
+          {isLoading ? textNext : textPrev}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
 
 const CheckUpdate = () => {
   const seralNo = useSelector(state => state.connection.seralNo);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState();
   const [error, setError] = useState(null);
-  const [status, setStatus] = useState(false);
+  const [status, setStatus] = useState(1);
 
   const checkUpdate = async () => {
     console.log("checkUpdate");
     setIsLoading(true);
     try {
       const response = await checkSoftwareUpdate(seralNo);
-      console.log(response.data);
-      setStatus(response.data.is_available_update);
-
+      response.status == 200 ? setIsLoading(false) : setIsLoading(true);
+      console.log(response);
+      setStatus(2);
+      ToastAndroid.show('Checking for Updates', ToastAndroid.SHORT);
     } catch (error) {
       setError(error);
     }
-    setIsLoading(false);
+  }
+  const downloadfunction = async () => {
+    setTimeout(() => {
+      setIsLoading(false);
+      setStatus(3);
+      ToastAndroid.show('Downloaded Update', ToastAndroid.SHORT);
+    }
+      , 5000);
   }
 
-  const startUpdateProcess = async () => {
+  const updating = async () => {
+    setTimeout(() => {
+      setIsLoading(false);
+      setStatus(1);
+      ToastAndroid.show('Update Completed', ToastAndroid.SHORT);
+    }
+      , 5000);
+  }
+  const startDownloadUpdate = async () => {
     setIsLoading(true);
     try {
-      const response = await startUpdate(seralNo, { is_update_available: true });
+      const response = await startDownloadingUpdate(seralNo, { is_update_available: true });
       if (response.status == 200) {
-        setStatus(false);
-        ToastAndroid.show('Update started', ToastAndroid.LONG);
+        downloadfunction()
+        ToastAndroid.show('Download started', ToastAndroid.SHORT);
+
       }
       else {
-        ToastAndroid.show('Update failed', ToastAndroid.LONG);
+        ToastAndroid.show('Download failed', ToastAndroid.SHORT);
       }
     }
     catch (error) {
       setError(error);
     }
-    setIsLoading(false);
+  }
+
+
+  const startUpdateProcess = async () => {
+    setIsLoading(true);
+    try {
+      const response = await startDownloadingUpdate(seralNo, { is_update_available: true });
+      if (response.status == 200) {
+        updating()
+        ToastAndroid.show('Update started', ToastAndroid.SHORT);
+      }
+      else {
+        ToastAndroid.show('Update failed', ToastAndroid.SHORT);
+      }
+    }
+    catch (error) {
+      setError(error);
+    }
   }
 
 
@@ -62,32 +115,30 @@ const CheckUpdate = () => {
       <Text style={styles.title}>Check for latest Software Update</Text>
       <Text style={styles.description}>Software updates increases stability and performance. Keep your device upto date with the latest software</Text>
       <View style={styles.updateButton}>
-        {!status && <TouchableOpacity onPress={checkUpdate}>
-          <View
-            style={{
-              ...styles.button,
-              backgroundColor: isLoading ? "#4caf50" : "#8bc34a",
-            }}
-          >
-            {isLoading && <ActivityIndicator size="large" color="yellow" />}
-            <Text style={styles.buttonText}>
-              {isLoading ? "Stop Checking" : "Check for Update"}
-            </Text>
-          </View>
-        </TouchableOpacity>}
-        {status && <TouchableOpacity onPress={startUpdateProcess}>
-          <View
-            style={{
-              ...styles.button,
-              backgroundColor: isLoading ? "#4caf50" : "#8bc34a",
-            }}
-          >
-            {isLoading && <ActivityIndicator size="large" color="yellow" />}
-            <Text style={styles.buttonText}>
-              Start Update
-            </Text>
-          </View>
-        </TouchableOpacity>}
+
+        {status == 1 &&
+          <ButtonComponent
+            onPress={checkUpdate}
+            isLoading={isLoading}
+            textNext="Stop Checking"
+            textPrev="Check for Update"
+          />}
+        {status == 2 &&
+          <ButtonComponent
+            onPress={startDownloadUpdate}
+            isLoading={isLoading}
+            textNext="Downloading"
+            textPrev="Download Update"
+          />
+        }
+        {status == 3 &&
+          <ButtonComponent
+            onPress={startUpdateProcess}
+            isLoading={isLoading}
+            textNext="Updateing"
+            textPrev="Start Update"
+          />
+        }
       </View>
     </View>
   )

@@ -7,8 +7,8 @@ import {
     SafeAreaView,
     ScrollView,
     Modal,
-    TextInput,
-    Pressable
+    Pressable,
+    ToastAndroid
 } from 'react-native'
 import { Input } from 'react-native-elements'
 import React, { useState, useEffect, useCallback } from 'react'
@@ -25,8 +25,9 @@ import { useNavigation } from '@react-navigation/native';
 import { getRobotData, connectedTo } from '../../redux/Actions/index';
 import { setRobotData } from '../../redux/Actions/robotActions';
 import { Formik } from 'formik';
-import { setWifiCreds } from '../../services/services'
+import { setWifiCreds, pingToServer } from '../../services/services'
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { list } from 'mocha/lib/reporters';
 
 
 const devicePrefix = 'dandy';
@@ -37,6 +38,7 @@ const Home = () => {
     const serialNo = useSelector(state => state.connection.seralNo);
     const robotInfo = useSelector(state => state.connection);
     const networkInfo = useSelector(state => state.network.connectionStatus);
+    const robots = useSelector(state => state.robot.robots);
     const navigation = useNavigation();
     const [ssid, setSsid] = useState('');
     const [deviceList, setWifiList] = useState([]);
@@ -49,6 +51,8 @@ const Home = () => {
     const [error, setError] = useState(false);
     const [connectionsStatus, setConnectionsStatus] = useState(false);
     const [passwordShow, setPasswordShow] = useState(false);
+    const [availableDevices, setAvailableDevices] = useState([]);
+    const [listVisible, setListVisible] = useState(false);
 
     //find password for provided ssid
     const findPassword = (ssid) => {
@@ -126,6 +130,7 @@ const Home = () => {
     };
 
     const getDeviceList = async () => {
+        setAvailableDevices([]);
         if (Platform.OS === 'android') {
             await WifiManager.loadWifiList().then(wifiList => {
                 setWifiList(wifiList);
@@ -204,6 +209,38 @@ const Home = () => {
         }
     };
 
+    const pingHosts = async () => {
+        await pingToServer(serialNo).then(res => {
+            console.log("ping", res)
+        }
+        ).catch(err => {
+            console.log("ping error", err)
+        }
+        )
+
+
+    }
+
+    // go through an array and check with every item by using pingToServer with the serial_number 
+    const pingAll = async () => {
+        setWifiList([])
+        let arr = [];
+        robots.map((robot) => {
+            arr.push(pingToServer(robot.device.serial_number))
+        })
+        await Promise.all(arr).then(res => {
+            console.log("ping", res)
+            setAvailableDevices(res)
+            setListVisible(true)
+        }
+        ).catch(err => {
+            console.log("ping error", err)
+        }
+        )
+        console.log("array", arr)
+    }
+
+
     useEffect(() => {
         dispatch(getRobotData())
         getPermission()
@@ -221,16 +258,14 @@ const Home = () => {
             WifiManager.setEnabled(true);
         }
 
-        // if (!networkInfo && !internetConnected) {
-        //     setModalVisible(true)
-        // }
 
     }, [permission, wifiStatus, isWifiEnabled, networkInfo]);
 
     const disconnect = () => {
         WifiManager.disconnect()
             .then(wifi => {
-                console.log(wifi)
+                console.log("disconnect", wifi)
+                setSsid("")
             })
             .catch(error => {
                 console.log(error);
@@ -262,13 +297,15 @@ const Home = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            {`${ssid}`.includes(devicePrefix) && <Card
-                name={`${current_connection.wifi}`.includes(devicePrefix) ? `${current_connection.wifi}` : "No Dandy connected"}
-                count={current_connection.wifi === ssid ? 100 : "N/A"}
-                onTap={() => current_connection.wifi === ssid ? disconnect() : connectToWifi(current_connection.wifi)}
-                // onWHoleTap={() => navigation.navigate('Devices')}
-                buttonText={current_connection.wifi === ssid ? "Disconnect" : "Connect"}
-            />}
+            {`${ssid}`.includes(devicePrefix) &&
+                <Card
+                    name={`${current_connection.wifi}`.includes(devicePrefix) ? `${current_connection.wifi}` : "No Dandy connected"}
+                    count={current_connection.wifi === ssid ? 100 : "N/A"}
+                    onTap={() => { current_connection.wifi === ssid ? disconnect() : connectToWifi(current_connection.wifi) }}
+                    // onWHoleTap={() => navigation.navigate('Devices')}
+                    buttonText={current_connection.wifi === ssid ? "Disconnect" : "Connect"}
+                />
+            }
             <KeyboardAvoidingView
                 style={{ alignItems: 'center' }}
             >
@@ -357,6 +394,11 @@ const Home = () => {
                             buttonText={"Add Device"}
                             onTap={() => getDeviceList()}
                         />}
+                    {!`${ssid}`.includes(devicePrefix) &&
+                        <CircularButton
+                            buttonText={"Load Available Devices"}
+                            onTap={() => pingAll()}
+                        />}
                     <ScrollView>
                         {deviceList.length > 0 ? deviceList.map((wifi, index) => {
                             if (wifi.SSID.includes(devicePrefix) && !ssid.includes(devicePrefix)) {
@@ -368,6 +410,7 @@ const Home = () => {
                                             () => {
                                                 disconnect()
                                                 connectToWifi(wifi.SSID)
+                                                setListVisible(false)
                                             }
                                         }
                                         onWHoleTap={() => disconnect()}
@@ -379,7 +422,25 @@ const Home = () => {
                                 return null
                             }
                         }) : (!`${current_connection.wifi}`.includes(devicePrefix) || !`${ssid}`.includes(devicePrefix) &&
-                            <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to connect</Text>)
+                            <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to pair device</Text>)
+                        }
+                        {
+                            !`${ssid}`.includes(devicePrefix) && availableDevices.length > 0 && availableDevices.map((device, index) => (
+                                <Card
+                                    key={index}
+                                    name={device.data.device.name}
+                                    onTap={
+                                        () => {
+
+                                            setSsid(device.data.device.name)
+                                            dispatch(currentConnection(device.data.device.name, device.data.device.serial_number));
+                                        }
+                                    }
+                                    // onWHoleTap={() => disconnect()}
+                                    buttonText={"Select"}
+                                />
+                            ))
+
                         }
                     </ScrollView>
                 </View>
