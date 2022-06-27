@@ -18,7 +18,7 @@ import CleanAlert from '../screen/CleanAlert/CleanAlert';
 import WalkAroundMarker from '../screen/WalkAroundMarker/WalkAroundMarker';
 import { useSelector } from 'react-redux';
 import CheckUpdate from '../screen/CheckUpdate/CheckUpdate';
-import AreaSelector from '../screen/AreaSelector/AreaSelector';
+// import AreaSelector from '../screen/AreaSelector/AreaSelector';
 import OrderMedia from '../screen/OrderMedia/OrderMedia';
 import Feedback from '../screen/Feedback/Feedback';
 import Support from '../screen/Support/Support';
