@@ -169,8 +169,8 @@ const Area = () => {
     setCreatingHole(false);
     console.log('info', polygons, editing, creatingHole);
     setFencingCoords(serialNo, editing)
-      .then(res => { ToastAndroid.show('Fencing coordinates saved', ToastAndroid.LONG) })
-      .catch(err => { ToastAndroid.show('Fencing coordinates not saved', ToastAndroid.LONG) });
+      .then(res => { ToastAndroid.show('Fencing coordinates saved, Serial no:' + `${serialNo}`, ToastAndroid.LONG) })
+      .catch(err => { ToastAndroid.show('Fencing coordinates not saved, Serial no:' + `${serialNo}`, ToastAndroid.LONG) });
     captureScreen({
       format: "jpg",
       quality: 0.8
