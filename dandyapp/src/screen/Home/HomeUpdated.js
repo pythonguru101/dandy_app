@@ -277,13 +277,25 @@ const Home = () => {
         setWifiCreds(serialNo, values).then(res => {
             console.log("Response", res)
             if (res.status === 200) {
-                setModalVisible(!modalVisible)
                 setError(false)
                 dispatch(setRobotData(res.data))
                 dispatch(connectedTo(res.data.device.connected_ssid))
+                setModalVisible(!modalVisible)
+                setTimeout(() => {
+                    ToastAndroid.show(
+                        `Connected to${values.ssid}`,
+                        ToastAndroid.LONG,
+                    );
+                }, 1000);
             }
             else {
                 setError(true)
+                setTimeout(() => {
+                    ToastAndroid.show(
+                        `Can not connect to ${values.ssid}`,
+                        ToastAndroid.LONG,
+                    );
+                }, 1000);
             }
 
 
@@ -327,13 +339,7 @@ const Home = () => {
                                     `Connecting to${values.ssid}`,
                                     ToastAndroid.SHORT,
                                 );
-                                setTimeout(() => {
-                                    ToastAndroid.show(
-                                        `Connected to${values.ssid}`,
-                                        ToastAndroid.LONG,
-                                    );
-                                    setModalVisible(!modalVisible);
-                                }, 1000);
+
                             }}>
                             {({ handleChange, handleBlur, handleSubmit, values }) => (
                                 <View style={styles.modalView}>
