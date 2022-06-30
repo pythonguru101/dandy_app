@@ -379,7 +379,11 @@ const Home = () => {
                                         }}>
                                         <Pressable
                                             style={[styles.button, styles.buttonCancel]}
-                                            onPress={() => setModalVisible(!modalVisible)}>
+                                            onPress={() => {
+                                                setModalVisible(!modalVisible)
+                                                setError(false)
+                                            }
+                                            }>
                                             <Text style={styles.textStyle}>Cancel</Text>
                                         </Pressable>
                                         <Pressable
