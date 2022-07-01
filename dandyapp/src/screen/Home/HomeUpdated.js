@@ -381,6 +381,7 @@ const Home = () => {
                                         inputContainerStyle={styles.input}
                                         keyboardType="default"
                                         style={styles.inputText}
+                                        autoCapitalize="none"
                                     />
                                     <Input
                                         label="Password"
@@ -390,6 +391,7 @@ const Home = () => {
                                         value={values.password}
                                         placeholder="Password"
                                         keyboardType="default"
+                                        autoCapitalize="none"
                                         rightIcon={
                                             <Icon
                                                 name={passwordShow ? 'eye-slash' : 'eye'}
