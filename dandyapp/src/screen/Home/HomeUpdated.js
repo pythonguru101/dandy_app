@@ -147,7 +147,9 @@ const Home = () => {
     //get wifi status
     const getWifiStatus = () => {
         DeviceInfo.getAvailableLocationProviders().then(providers => {
-            if (providers.locationServicesEnabled == true) {
+            console.log("status provider", providers)
+            const { fused, gps, network, passive } = providers;
+            if (gps == true) {
                 WifiManager.getCurrentWifiSSID().then(
                     ssid => {
                         console.log("Your current connected wifi SSID is " + ssid);
@@ -161,6 +163,7 @@ const Home = () => {
                 );
             }
             else {
+                console.log("not gps on")
                 alert('Please enable location services')
             }
         })
@@ -273,7 +276,7 @@ const Home = () => {
 
         if (!isWifiEnabled) {
             DeviceInfo.getAvailableLocationProviders().then(providers => {
-                if (providers.locationServicesEnabled == true) {
+                if (providers.gps == true) {
                     WifiManager.setEnabled(true);
                 }
                 else {

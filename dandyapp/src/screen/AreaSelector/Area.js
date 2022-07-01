@@ -64,9 +64,8 @@ const Area = () => {
   const [coordinates, setCoordinates] = useState(initialPosition);
   const dispatch = useDispatch();
   const fencing = useSelector(state => state.fencing);
-  const [showMap, setShowMap] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  // const [mapName, setMapName] = useState('');
+
   //getting permission if no yet got
   const getPermission = async () => {
     if (Platform.OS === 'android') {
@@ -268,176 +267,163 @@ const Area = () => {
 
   }
 
-  if (!showMap) {
-    return (
-      <View style={{ flex: 1, backgroundColor: "#f2c041", alignItems: "center" }}>
-        <View style={{ backgroundColor: "white", width: 180, borderRadius: 20, padding: 10, top: "40%" }}>
-          <Pressable onPress={() => {
-            setShowMap(!showMap)
+  return (
+    <View style={styles.container}>
+      <KeyboardAvoidingView>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!modalVisible);
           }}>
-            <Text style={{ fontSize: 20, fontWeight: "900", textAlign: "center", color: '#808080' }}>Open Area Selector</Text>
-          </Pressable>
-        </View>
-      </View>
-    )
-  } else {
-    return (
-      <View style={styles.container}>
-        <KeyboardAvoidingView>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              Alert.alert('Modal has been closed.');
-              setModalVisible(!modalVisible);
-            }}>
-            <View style={styles.centeredView}>
-              <Formik
-                initialValues={{ mapName: '' }}
-                onSubmit={values => {
-                  onSubmitFunction(values);
-                  ToastAndroid.show(
-                    `Saved ${values.mapName}`,
-                    ToastAndroid.TOP,
-                  );
-                  setTimeout(() => {
-                    setModalVisible(!modalVisible);
-                  }, 1000);
-                }}>
-                {({ handleChange, handleBlur, handleSubmit, values }) => (
-                  <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Save Selected Area</Text>
-                    {/* {error && <Text style={{ color: "red" }}>Couldn't connect to wifi</Text>} */}
-                    <TextInput
-                      style={styles.inputModal}
-                      onChangeText={handleChange('mapName')}
-                      onBlur={handleBlur('mapName')}
-                      value={values.ssid}
-                      placeholder="Name"
-                      keyboardType="default"
-                    />
+          <View style={styles.centeredView}>
+            <Formik
+              initialValues={{ mapName: '' }}
+              onSubmit={values => {
+                onSubmitFunction(values);
+                ToastAndroid.show(
+                  `Saved ${values.mapName}`,
+                  ToastAndroid.TOP,
+                );
+                setTimeout(() => {
+                  setModalVisible(!modalVisible);
+                }, 1000);
+              }}>
+              {({ handleChange, handleBlur, handleSubmit, values }) => (
+                <View style={styles.modalView}>
+                  <Text style={styles.modalText}>Save Selected Area</Text>
+                  {/* {error && <Text style={{ color: "red" }}>Couldn't connect to wifi</Text>} */}
+                  <TextInput
+                    style={styles.inputModal}
+                    onChangeText={handleChange('mapName')}
+                    onBlur={handleBlur('mapName')}
+                    value={values.ssid}
+                    placeholder="Name"
+                    keyboardType="default"
+                  />
 
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
-                      <Pressable
-                        style={[styles.buttonModal, styles.buttonConnectModal]}
-                        onPress={handleSubmit}>
-                        <Text style={styles.textStyleModal}>Save</Text>
-                      </Pressable>
-                      <Pressable
-                        style={[styles.buttonModal, styles.buttonCancelModal]}
-                        onPress={() => setModalVisible(!modalVisible)}>
-                        <Text style={styles.textStyleModal}>Cancel</Text>
-                      </Pressable>
-                    </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <Pressable
+                      style={[styles.buttonModal, styles.buttonConnectModal]}
+                      onPress={handleSubmit}>
+                      <Text style={styles.textStyleModal}>Save</Text>
+                    </Pressable>
+                    <Pressable
+                      style={[styles.buttonModal, styles.buttonCancelModal]}
+                      onPress={() => setModalVisible(!modalVisible)}>
+                      <Text style={styles.textStyleModal}>Cancel</Text>
+                    </Pressable>
                   </View>
-                )}
-              </Formik>
-            </View>
-          </Modal>
-        </KeyboardAvoidingView>
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={styles.map}
-          mapType={MAP_TYPES.SATELLITE}
-          maxZoomLevel={20}
-          zoomEnabled={true}
-          zoomControlEnabled={true}
-          zoomTapEnabled={true}
-          onPress={e => onPress(e)}
-          region={{
-            latitude: regionlat,
-            longitude: regionlng,
-            latitudeDelta: latitudeDelta,
-            longitudeDelta: longitudeDelta,
+                </View>
+              )}
+            </Formik>
+          </View>
+        </Modal>
+      </KeyboardAvoidingView>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        style={styles.map}
+        mapType={MAP_TYPES.SATELLITE}
+        maxZoomLevel={20}
+        zoomEnabled={true}
+        zoomControlEnabled={true}
+        zoomTapEnabled={true}
+        onPress={e => onPress(e)}
+        region={{
+          latitude: regionlat,
+          longitude: regionlng,
+          latitudeDelta: latitudeDelta,
+          longitudeDelta: longitudeDelta,
+        }}
+        onRegionChangeComplete={e => {
+          setLongitudeDelta(e.longitudeDelta)
+          setLatitudeDelta(e.latitudeDelta)
+          setRegionLat(e.latitude)
+          setRegionLng(e.longitude)
+        }}
+        {...mapOptions}>
+        <Marker
+          coordinate={{
+            latitude: lat,
+            longitude: lng,
           }}
-          onRegionChangeComplete={e => {
-            setLongitudeDelta(e.longitudeDelta)
-            setLatitudeDelta(e.latitudeDelta)
-            setRegionLat(e.latitude)
-            setRegionLng(e.longitude)
+          title="My Location"
+          description="This is where I am"
+          image={marker}
+        />
+        <Marker
+          coordinate={{
+            latitude: lat + 0.00007565,
+            longitude: lng + 0.00019599,
           }}
-          {...mapOptions}>
+          title="Robots Location"
+          description="This is where Robot is"
+          image={robot}
+          style={{ width: 10, height: 10 }}
+        />
+        {polygons.map(polygon => (
+          <Polygon
+            key={polygon?.id}
+            coordinates={polygon.coordinates}
+            holes={polygon.holes}
+            strokeColor="rgba(30,0,255,1)"
+            fillColor="rgba(0,0,255,0.5)"
+            strokeWidth={2}
+          />
+        ))}
+
+        {editing && (
+          <Polygon
+            key={editing.id}
+            coordinates={editing.coordinates}
+            holes={editing.holes}
+            strokeColor="rgba(30,0,255,1)"
+            fillColor="rgba(0,0,255,0.5)"
+            strokeWidth={2}
+          />
+        )}
+        {editing && console.log('Editing', editing)}
+        {editing && (
           <Marker
-            coordinate={{
-              latitude: lat,
-              longitude: lng,
-            }}
+            coordinate={editing.coordinates[editing.coordinates.length - 1]}
             title="My Location"
             description="This is where I am"
-            image={marker}
+            image={ball}
           />
-          <Marker
-            coordinate={{
-              latitude: lat + 0.00007565,
-              longitude: lng + 0.00019599,
-            }}
-            title="Robots Location"
-            description="This is where Robot is"
-            image={robot}
-            style={{ width: 10, height: 10 }}
-          />
-          {polygons.map(polygon => (
-            <Polygon
-              key={polygon?.id}
-              coordinates={polygon.coordinates}
-              holes={polygon.holes}
-              strokeColor="rgba(30,0,255,1)"
-              fillColor="rgba(0,0,255,0.5)"
-              strokeWidth={2}
-            />
-          ))}
+        )}
+      </MapView>
 
-          {editing && (
-            <Polygon
-              key={editing.id}
-              coordinates={editing.coordinates}
-              holes={editing.holes}
-              strokeColor="rgba(30,0,255,1)"
-              fillColor="rgba(0,0,255,0.5)"
-              strokeWidth={2}
-            />
-          )}
-          {editing && console.log('Editing', editing)}
-          {editing && (
-            <Marker
-              coordinate={editing.coordinates[editing.coordinates.length - 1]}
-              title="My Location"
-              description="This is where I am"
-              image={ball}
-            />
-          )}
-        </MapView>
-
-        <View style={styles.buttonContainerMain}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => clear()}
-              style={[styles.bubble, styles.button]}>
-              <Text style={styles.buttonText}>Clear</Text>
-            </TouchableOpacity>
-            {editing && (
-              <TouchableOpacity
-                onPress={() => setModalVisible(true)}
-                style={[styles.bubble, styles.button]}>
-                <Text style={styles.buttonText}>Finish</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+      <View style={styles.buttonContainerMain}>
+        <View style={styles.buttonContainer}>
           <TouchableOpacity
-            onPress={() => getCurrentLocation()}
-            style={[styles.bubbleC, styles.buttonC]}>
-            <Image source={updateLocation} style={{ width: 30, height: 30 }} />
+            onPress={() => clear()}
+            style={[styles.bubble, styles.button]}>
+            <Text style={styles.buttonText}>Clear</Text>
           </TouchableOpacity>
+          {editing && (
+            <TouchableOpacity
+              onPress={() => setModalVisible(true)}
+              style={[styles.bubble, styles.button]}>
+              <Text style={styles.buttonText}>Finish</Text>
+            </TouchableOpacity>
+          )}
         </View>
+        <TouchableOpacity
+          onPress={() => getCurrentLocation()}
+          style={[styles.bubbleC, styles.buttonC]}>
+          <Image source={updateLocation} style={{ width: 30, height: 30 }} />
+        </TouchableOpacity>
       </View>
-    );
-  }
-};
+    </View>
+  );
+}
+
 
 export default Area;
 
