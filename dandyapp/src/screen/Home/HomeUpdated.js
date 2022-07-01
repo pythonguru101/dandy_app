@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { currentConnection } from '../../redux/Actions/index'
 import NetInfo from "@react-native-community/netinfo";
 import { useNavigation } from '@react-navigation/native';
-import { getRobotData, connectedTo } from '../../redux/Actions/index';
+import { getRobotData, connectedTo, setHomeSSID } from '../../redux/Actions/index';
 import { setRobotData } from '../../redux/Actions/robotActions';
 import { Formik } from 'formik';
 import { setWifiCreds, pingToServer } from '../../services/services'
@@ -53,29 +53,16 @@ const Home = () => {
     const [passwordShow, setPasswordShow] = useState(false);
     const [availableDevices, setAvailableDevices] = useState([]);
     const [listVisible, setListVisible] = useState(false);
+    const homeWifi = useSelector(state => state.connection.homeSSID)
+    console.log(homeWifi)
 
-    //find password for provided ssid
-    const findPassword = (ssid) => {
-        let password = '';
-        devices.map((device) => {
-            if (device.SSID === ssid) {
-                password = device.password;
-            }
-        });
-        return password;
-    }
     const getNumbers = (str) => {
         return str.replace(/[^0-9]/g, '');
     }
 
     const connectToWifi = async (id) => {
         setWifiConnecting(true);
-        // const pass = await findPassword(id);
         const serial = getNumbers(id);
-        console.log(serial, "serial");
-
-        // console.log("pass", pass)
-        console.log("ssid", id)
         if (Platform.OS === 'android') {
             WifiManager.connectToProtectedSSID(id, "dandypassword", false)
                 .then(wifi => {
@@ -94,7 +81,7 @@ const Home = () => {
                 });
         }
         else {
-            WifiManager.connectToProtectedSSIDPrefix(id, "dandypassword", false).then(wifi => {
+            WifiManager.connectToProtectedSSIDPrefix("dandy", "dandypassword", false).then(wifi => {
                 setWifiConnecting(false);
                 setWifiConnected(true);
                 getWifiStatus()
@@ -111,6 +98,7 @@ const Home = () => {
         }
     };
 
+    //disconnect from wifi
     const disconnectFromWifi = (ssid) => {
 
         if (Platform.OS === 'ios') {
@@ -129,6 +117,7 @@ const Home = () => {
         }
     };
 
+    //get device list
     const getDeviceList = async () => {
         setAvailableDevices([]);
         if (Platform.OS === 'android') {
@@ -143,6 +132,7 @@ const Home = () => {
 
     };
 
+    //get wifi status
     const getWifiStatus = () => {
         WifiManager.getCurrentWifiSSID().then(
             ssid => {
@@ -156,6 +146,8 @@ const Home = () => {
             }
         );
     };
+
+    //get permission to access wifi
     const getPermission = async () => {
         if (Platform.OS === 'android') {
             try {
@@ -209,24 +201,15 @@ const Home = () => {
         }
     };
 
-    const pingHosts = async () => {
-        await pingToServer(serialNo).then(res => {
-            console.log("ping", res)
-        }
-        ).catch(err => {
-            console.log("ping error", err)
-        }
-        )
-
-
-    }
 
     // go through an array and check with every item by using pingToServer with the serial_number 
     const pingAll = async () => {
+        console.log("pining")
         setWifiList([])
         let arr = [];
         robots.map((robot) => {
-            arr.push(pingToServer(robot.device.serial_number))
+            console.log(robot, "jjjjjjjjj")
+            arr.push(pingToServer(robot.data.device.serial_number))
         })
         await Promise.all(arr).then(res => {
             console.log("ping", res)
@@ -240,6 +223,16 @@ const Home = () => {
         console.log("array", arr)
     }
 
+    const saveWifi = async () => {
+        WifiManager.getCurrentWifiSSID().then(
+            ssid => {
+                console.log("Home SSID " + ssid);
+                dispatch(setHomeSSID(ssid));
+
+            }
+        );
+
+    }
 
     useEffect(() => {
         dispatch(getRobotData())
@@ -257,8 +250,6 @@ const Home = () => {
         if (!isWifiEnabled) {
             WifiManager.setEnabled(true);
         }
-
-
     }, [permission, wifiStatus, isWifiEnabled, networkInfo]);
 
     const disconnect = () => {
@@ -278,7 +269,10 @@ const Home = () => {
             console.log("Response", res)
             if (res.status === 200) {
                 setError(false)
-                dispatch(setRobotData(res.data))
+                // dispatch set robot data after checking if the robot is already in the list
+                if (!robots.some(robot => robot.device.serial_number === serialNo)) {
+                    dispatch(setRobotData(res))
+                }
                 dispatch(connectedTo(res.data.device.connected_ssid))
                 setModalVisible(!modalVisible)
                 setTimeout(() => {
@@ -306,7 +300,7 @@ const Home = () => {
         }
         )
     };
-
+    console.log("available device", availableDevices)
     return (
         <SafeAreaView style={styles.container}>
             {`${ssid}`.includes(devicePrefix) &&
@@ -314,7 +308,6 @@ const Home = () => {
                     name={`${current_connection.wifi}`.includes(devicePrefix) ? `${current_connection.wifi}` : "No Dandy connected"}
                     count={current_connection.wifi === ssid ? 100 : "N/A"}
                     onTap={() => { current_connection.wifi === ssid ? disconnect() : connectToWifi(current_connection.wifi) }}
-                    // onWHoleTap={() => navigation.navigate('Devices')}
                     buttonText={current_connection.wifi === ssid ? "Disconnect" : "Connect"}
                 />
             }
@@ -332,7 +325,7 @@ const Home = () => {
                     }}>
                     <View style={styles.centeredView}>
                         <Formik
-                            initialValues={{ ssid: '', password: '' }}
+                            initialValues={{ ssid: homeWifi, password: '' }}
                             onSubmit={values => {
                                 onSubmitFunction(values);
                                 ToastAndroid.show(
@@ -350,9 +343,10 @@ const Home = () => {
                                         value={values.ssid}
                                         onChangeText={handleChange('ssid')}
                                         onBlur={handleBlur('ssid')}
-                                        placeholder="SSID"
+                                        placeholder={homeWifi == "" ? "SSID" : homeWifi}
                                         inputContainerStyle={styles.input}
                                         keyboardType="default"
+                                        style={styles.inputText}
                                     />
                                     <Input
                                         label="Password"
@@ -371,6 +365,7 @@ const Home = () => {
                                             />
                                         }
                                         inputContainerStyle={styles.input}
+                                        style={styles.inputText}
                                     />
                                     <View
                                         style={{
@@ -397,12 +392,14 @@ const Home = () => {
                         </Formik>
                     </View>
                 </Modal>
-
                 <View>
                     {!`${ssid}`.includes(devicePrefix) &&
                         <CircularButton
                             buttonText={"Add Device"}
-                            onTap={() => getDeviceList()}
+                            onTap={() => {
+                                getDeviceList()
+                                saveWifi()
+                            }}
                         />}
                     {!`${ssid}`.includes(devicePrefix) &&
                         <CircularButton
@@ -435,7 +432,9 @@ const Home = () => {
                             <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tap on Add Device to pair device</Text>)
                         }
                         {
-                            !`${ssid}`.includes(devicePrefix) && availableDevices.length > 0 && availableDevices.map((device, index) => (
+                            !`${ssid}`.includes(devicePrefix) &&
+                            availableDevices.length > 0 &&
+                            availableDevices.map((device, index) => (
                                 <Card
                                     key={index}
                                     name={device.data.device.name}
@@ -446,7 +445,6 @@ const Home = () => {
                                             dispatch(currentConnection(device.data.device.name, device.data.device.serial_number));
                                         }
                                     }
-                                    // onWHoleTap={() => disconnect()}
                                     buttonText={"Select"}
                                 />
                             ))

@@ -1,5 +1,5 @@
 import {
-  WIFI_STATUS,
+  WIFI_STATUS, SET_HOME_SSID
 } from '../ActionTypes';
 
 const initialState = {
@@ -7,6 +7,7 @@ const initialState = {
   wifi: "",
   connectionStatus: false,
   seralNo: "1",
+  homeSSID: "",
 };
 
 const ConnectionReducer = (state = initialState, action) => {
@@ -19,6 +20,13 @@ const ConnectionReducer = (state = initialState, action) => {
         connectionStatus: true,
         seralNo: action.payload.serial,
       };
+
+    case SET_HOME_SSID:
+      return {
+        ...state,
+        homeSSID: action.payload,
+      };
+
     default:
       return state;
   }

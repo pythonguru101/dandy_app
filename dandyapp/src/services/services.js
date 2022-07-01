@@ -5,8 +5,12 @@ const baseUrl = 'http://dandy-robot-';
 const port = '.local:5000';
 
 
+export const pingToServer = (serialNo) => {
+    return axios.get(baseUrl + serialNo + '/');
+}
+
 export const setWifiCreds = (serialNo, value) => {
-    console.log("Set Wifi cred", value, serialNo);
+    console.log("Set Wifi cred", baseUrl + serialNo + '/connect-with-robot');
     return axios.post(baseUrl + serialNo + port + '/connect-with-robot', { ssid: value.ssid, password: value.password });
 };
 
