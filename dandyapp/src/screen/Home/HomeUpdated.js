@@ -17,7 +17,6 @@ import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import CircularButton from '../../components/CircularButton/CircularButton';
 import styles from './Style'
 import Card from '../../components/Card/Card';
-import devices from '../../data/devices';
 import { useDispatch, useSelector } from 'react-redux';
 import { currentConnection } from '../../redux/Actions/index'
 import NetInfo from "@react-native-community/netinfo";
@@ -27,7 +26,7 @@ import { setRobotData } from '../../redux/Actions/robotActions';
 import { Formik } from 'formik';
 import { setWifiCreds, pingToServer } from '../../services/services'
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { list } from 'mocha/lib/reporters';
+import DeviceInfo from 'react-native-device-info';
 
 
 const devicePrefix = 'dandy';
@@ -99,52 +98,72 @@ const Home = () => {
     };
 
     //disconnect from wifi
-    const disconnectFromWifi = (ssid) => {
+    // const disconnectFromWifi = (ssid) => {
 
-        if (Platform.OS === 'ios') {
+    //     if (Platform.OS === 'ios') {
 
-            WifiManager.disconnectFromSSID(ssid)
-                .then(wifi => {
-                    console.log(wifi)
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-        }
+    //         WifiManager.disconnectFromSSID(ssid)
+    //             .then(wifi => {
+    //                 console.log(wifi)
+    //             })
+    //             .catch(error => {
+    //                 console.log(error);
+    //             });
+    //     }
 
-        else {
-            WifiManager.disconnect()
-        }
-    };
+    //     else {
+    //         WifiManager.disconnect()
+    //     }
+    // };
 
     //get device list
     const getDeviceList = async () => {
         setAvailableDevices([]);
         if (Platform.OS === 'android') {
-            await WifiManager.loadWifiList().then(wifiList => {
-                setWifiList(wifiList);
-                console.log("wifi list", wifiList)
-            });
+            await DeviceInfo.getAvailableLocationProviders().then(providers => {
+                if (providers.gps == true) {
+                    WifiManager.loadWifiList().then(wifiList => {
+                        setWifiList(wifiList);
+                        console.log("wifi list", wifiList)
+                    });
+                }
+            })
+
         }
         else {
-            connectToWifi()
+            DeviceInfo.getAvailableLocationProviders().then(providers => {
+                if (providers.locationServicesEnabled == true) {
+                    connectToWifi()
+
+                }
+                else {
+                    alert('Please enable location services')
+                }
+            })
         }
 
     };
 
     //get wifi status
     const getWifiStatus = () => {
-        WifiManager.getCurrentWifiSSID().then(
-            ssid => {
-                console.log("Your current connected wifi SSID is " + ssid);
-                setWifiConnected(true);
-                setWifiStatus("Connected to " + ssid);
-                setSsid(ssid);
-            },
-            () => {
-                console.log("Cannot get current SSID!");
+        DeviceInfo.getAvailableLocationProviders().then(providers => {
+            if (providers.locationServicesEnabled == true) {
+                WifiManager.getCurrentWifiSSID().then(
+                    ssid => {
+                        console.log("Your current connected wifi SSID is " + ssid);
+                        setWifiConnected(true);
+                        setWifiStatus("Connected to " + ssid);
+                        setSsid(ssid);
+                    },
+                    () => {
+                        console.log("Cannot get current SSID!");
+                    }
+                );
             }
-        );
+            else {
+                alert('Please enable location services')
+            }
+        })
     };
 
     //get permission to access wifi
@@ -167,7 +186,7 @@ const Home = () => {
 
             }
             catch (err) {
-                console.warn(err);
+                console.log(err);
             }
         }
         else {
@@ -204,11 +223,9 @@ const Home = () => {
 
     // go through an array and check with every item by using pingToServer with the serial_number 
     const pingAll = async () => {
-        console.log("pining")
         setWifiList([])
         let arr = [];
         robots.map((robot) => {
-            console.log(robot, "jjjjjjjjj")
             arr.push(pingToServer(robot.data.device.serial_number))
         })
         await Promise.all(arr).then(res => {
@@ -220,17 +237,24 @@ const Home = () => {
             console.log("ping error", err)
         }
         )
-        console.log("array", arr)
+
     }
 
     const saveWifi = async () => {
-        WifiManager.getCurrentWifiSSID().then(
-            ssid => {
-                console.log("Home SSID " + ssid);
-                dispatch(setHomeSSID(ssid));
+        DeviceInfo.getAvailableLocationProviders().then(providers => {
+            if (providers.locationServicesEnabled == true) {
+                WifiManager.getCurrentWifiSSID().then(
+                    ssid => {
+                        console.log("Home SSID " + ssid);
+                        dispatch(setHomeSSID(ssid));
 
+                    }
+                );
             }
-        );
+            else {
+                alert('Please enable location services')
+            }
+        })
 
     }
 
@@ -248,7 +272,14 @@ const Home = () => {
         }
 
         if (!isWifiEnabled) {
-            WifiManager.setEnabled(true);
+            DeviceInfo.getAvailableLocationProviders().then(providers => {
+                if (providers.locationServicesEnabled == true) {
+                    WifiManager.setEnabled(true);
+                }
+                else {
+                    alert('Please enable location services')
+                }
+            })
         }
     }, [permission, wifiStatus, isWifiEnabled, networkInfo]);
 
@@ -300,7 +331,7 @@ const Home = () => {
         }
         )
     };
-    console.log("available device", availableDevices)
+
     return (
         <SafeAreaView style={styles.container}>
             {`${ssid}`.includes(devicePrefix) &&
