@@ -79,13 +79,17 @@ export const styles = StyleSheet.create({
         height: 40,
         margin: 12,
         borderWidth: 1,
-        padding: 10,
         borderColor: '#f2c041',
         borderRadius: 10,
         paddingLeft: 10,
         paddingRight: 10,
-        color: "black"
+        color: "red",
+        fontSize: 12,
     },
+    inputText: {
+        color: "black",
+        fontSize: 12,
+    }
 
 })
 

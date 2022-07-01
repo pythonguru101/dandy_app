@@ -5,6 +5,7 @@ import {
   SAVE_FENCING,
   GET_ROBOT_LOCATION,
   SET_ONBOARDING,
+  SET_HOME_SSID
 
 } from '../ActionTypes';
 import axios from 'axios';
@@ -69,5 +70,12 @@ export function getRobotData(serialNo) {
 export const setOnboarding = () => {
   return {
     type: SET_ONBOARDING,
+  };
+}
+
+export const setHomeSSID = (ssid) => {
+  return {
+    type: SET_HOME_SSID,
+    payload: ssid
   };
 }

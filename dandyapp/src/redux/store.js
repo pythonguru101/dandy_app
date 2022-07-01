@@ -12,6 +12,7 @@ const middleware = [thunk];
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
+    blacklist: ['connection']
 };
 
 if (process.env.NODE_ENV === 'development') {

@@ -1,58 +1,35 @@
-// import axios from 'axios';
-
-
-// const baseUrl = 'http://dandy-robot-5.local:5000';
-
-// export const setWifiCreds = (value) => {
-//     console.log("Set Wifi cred", value);
-//     return axios.post(baseUrl + '/connect-with-robot', { ssid: value.ssid, password: value.password });
-// };
-
-// export const setFencingCoords = (value) => {
-//     console.log(value);
-//     return axios.post(baseUrl + '/robot-location-fencing', value);
-// };
-
-// export const getdeviceslocation = () => {
-//     return axios.get(baseUrl + "/get-robot-current-location");
-// }
-
-
-// export const checkSoftwareUpdate = () => {
-//     return axios.get(baseUrl + "/check-update");
-
-// }
-
-// export const startUpdate = (value) => {
-//     return axios.post(baseUrl + "/update-software", value)
-// }
-
 import axios from 'axios';
 
 
-// const baseUrl = 'http://dandy-robot-5.local:5000';
+const baseUrl = 'http://dandy-robot-';
+const port = '.local:5000';
+
+
+export const pingToServer = (serialNo) => {
+    return axios.get(baseUrl + serialNo + '/');
+}
 
 export const setWifiCreds = (serialNo, value) => {
-    console.log("Set Wifi cred", value, serialNo);
-    return axios.post(`http://dandy-robot-${serialNo}.local:5000` + '/connect-with-robot', { ssid: value.ssid, password: value.password });
+    console.log("Set Wifi cred", baseUrl + serialNo + '/connect-with-robot');
+    return axios.post(baseUrl + serialNo + port + '/connect-with-robot', { ssid: value.ssid, password: value.password });
 };
 
-export const setFencingCoords = (value) => {
+export const setFencingCoords = (serialNo, value) => {
     console.log(value);
-    return axios.post(`http://dandy-robot-${serialNo}.local:5000` + '/robot-location-fencing', value);
+    return axios.post(baseUrl + serialNo + port + '/robot-location-fencing', value);
 };
 
 export const getdeviceslocation = (serialNo) => {
-    return axios.get(`http://dandy-robot-${serialNo}.local:5000` + "/get-robot-current-location");
+    return axios.get(baseUrl + serialNo + port + "/get-robot-current-location");
 }
 
 
 export const checkSoftwareUpdate = (serialNo) => {
-    return axios.get(`http://dandy-robot-${serialNo}.local:5000` + "/check-update");
+    return axios.get(baseUrl + serialNo + port + "/check-update");
 
 }
 
-export const startUpdate = (serialNo, value) => {
-    return axios.post(`http://dandy-robot-${serialNo}.local:5000` + "/update-software", value)
+export const startDownloadingUpdate = (serialNo, value) => {
+    return axios.post(baseUrl + serialNo + port + "/update-software", value)
 }
 

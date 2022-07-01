@@ -19,13 +19,12 @@ import WalkAroundMarker from '../screen/WalkAroundMarker/WalkAroundMarker';
 import { useSelector } from 'react-redux';
 import CheckUpdate from '../screen/CheckUpdate/CheckUpdate';
 // import AreaSelector from '../screen/AreaSelector/AreaSelector';
-// import WalkAround from '../screen/WalkAroundMarker/WalkAround';
-// import AreaMap from '../screen/AreaSelector/AreaMap';
 import OrderMedia from '../screen/OrderMedia/OrderMedia';
 import Feedback from '../screen/Feedback/Feedback';
 import Support from '../screen/Support/Support';
 import HomeUpdated from '../screen/Home/HomeUpdated';
 import OnboardingScreen from '../screen/Onboarding/Onboarding';
+import AboutDevice from '../screen/Settings/AboutDevice';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -147,6 +146,20 @@ const SettingsStack = () => (
                 fontWeight: 'bold',
             }
         }} />
+
+        <Stack.Screen name="AboutDevice" component={AboutDevice} options={{
+
+            headerShown: true,
+            title: 'About Device',
+            headerStyle: {
+                backgroundColor: '#fff',
+            },
+            headerTintColor: '#e2e2e2',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            }
+        }} />
+
     </Stack.Navigator>
 )
 

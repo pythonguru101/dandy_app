@@ -169,8 +169,8 @@ const Area = () => {
     setCreatingHole(false);
     console.log('info', polygons, editing, creatingHole);
     setFencingCoords(serialNo, editing)
-      .then(res => { ToastAndroid.show('Fencing coordinates saved', ToastAndroid.LONG) })
-      .catch(err => { ToastAndroid.show('Fencing coordinates not saved', ToastAndroid.LONG) });
+      .then(res => { ToastAndroid.show('Fencing coordinates saved, Serial no:' + `${serialNo}`, ToastAndroid.LONG) })
+      .catch(err => { ToastAndroid.show('Fencing coordinates not saved, Serial no:' + `${serialNo}`, ToastAndroid.LONG) });
     captureScreen({
       format: "jpg",
       quality: 0.8
@@ -275,7 +275,7 @@ const Area = () => {
           <Pressable onPress={() => {
             setShowMap(!showMap)
           }}>
-            <Text style={{ fontSize: 20, fontWeight: "900", textAlign: "center",color:'#808080' }}>Open Area Selector</Text>
+            <Text style={{ fontSize: 20, fontWeight: "900", textAlign: "center", color: '#808080' }}>Open Area Selector</Text>
           </Pressable>
         </View>
       </View>
@@ -389,7 +389,6 @@ const Area = () => {
               strokeColor="rgba(30,0,255,1)"
               fillColor="rgba(0,0,255,0.5)"
               strokeWidth={2}
-              pointerEvents="box-only"
             />
           ))}
 
