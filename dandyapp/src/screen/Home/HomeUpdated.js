@@ -35,10 +35,8 @@ const Home = () => {
     const dispatch = useDispatch();
     const current_connection = useSelector(state => state.connection);
     const serialNo = useSelector(state => state.connection.seralNo);
-    const robotInfo = useSelector(state => state.connection);
     const networkInfo = useSelector(state => state.network.connectionStatus);
     const robots = useSelector(state => state.robot.robots);
-    const navigation = useNavigation();
     const [ssid, setSsid] = useState('');
     const [deviceList, setWifiList] = useState([]);
     const [wifiStatus, setWifiStatus] = useState('');
@@ -48,7 +46,6 @@ const Home = () => {
     const [isWifiEnabled, setIsWifiEnabled] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [error, setError] = useState(false);
-    const [connectionsStatus, setConnectionsStatus] = useState(false);
     const [passwordShow, setPasswordShow] = useState(false);
     const [availableDevices, setAvailableDevices] = useState([]);
     const [listVisible, setListVisible] = useState(false);
@@ -97,24 +94,6 @@ const Home = () => {
         }
     };
 
-    //disconnect from wifi
-    // const disconnectFromWifi = (ssid) => {
-
-    //     if (Platform.OS === 'ios') {
-
-    //         WifiManager.disconnectFromSSID(ssid)
-    //             .then(wifi => {
-    //                 console.log(wifi)
-    //             })
-    //             .catch(error => {
-    //                 console.log(error);
-    //             });
-    //     }
-
-    //     else {
-    //         WifiManager.disconnect()
-    //     }
-    // };
 
     //get device list
     const getDeviceList = async () => {
@@ -245,24 +224,40 @@ const Home = () => {
 
     const saveWifi = async () => {
         DeviceInfo.getAvailableLocationProviders().then(providers => {
-            if (providers.locationServicesEnabled == true) {
-                WifiManager.getCurrentWifiSSID().then(
-                    ssid => {
-                        console.log("Home SSID " + ssid);
-                        dispatch(setHomeSSID(ssid));
+            if (Platform.OS === 'android') {
+                if (providers.gps == true) {
+                    WifiManager.getCurrentWifiSSID().then(
+                        ssid => {
+                            console.log("Home SSID " + ssid);
+                            dispatch(setHomeSSID(ssid));
 
-                    }
-                );
+                        }
+                    );
+                }
+                else {
+                    alert('Please enable location services')
+                }
             }
             else {
-                alert('Please enable location services')
+                if (providers.locationServicesEnabled == true) {
+                    WifiManager.getCurrentWifiSSID().then(
+                        ssid => {
+                            console.log("Home SSID " + ssid);
+                            dispatch(setHomeSSID(ssid));
+
+                        }
+                    );
+                }
+                else {
+                    alert('Please enable location services')
+                }
             }
         })
 
     }
 
     useEffect(() => {
-        dispatch(getRobotData())
+        // dispatch(getRobotData())
         getPermission()
         const unsubscribe = NetInfo.addEventListener(state => {
             setIsWifiEnabled(state.isWifiEnabled)
