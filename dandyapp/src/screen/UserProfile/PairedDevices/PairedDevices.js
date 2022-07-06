@@ -11,22 +11,12 @@ import {
 } from 'react-native';
 import grasscutter from '../../../assets/cutting.png'
 import { useSelector } from 'react-redux';
-const calls = [
-    { name: "Back Yard", status: "Complete", date: "05/06/2022" },
-    { name: "Yard", status: "Complete", date: "05/06/2022" },
-    { name: "Garden", status: "Complete", date: "05/06/2022" },
-    { name: "Roof", status: "Complete", date: "05/06/2022" },
-    { name: "Roof", status: "Incomplete", date: "05/06/2022" },
-    { name: "Back Yard", status: "Complete", date: "05/06/2022" },
-    { name: "Garden", status: "Incomplete", date: "05/06/2022" },
-    { name: "Garden", status: "Complete", date: "05/06/2022" },
-    { name: "Back Yard", status: "Complete", date: "05/06/2022" },
-    { name: "Garden", status: "Incomplete", date: "05/06/2022" },
-]
+
 const CleaningHistory = () => {
     const dataRobots = useSelector(state => state.robot.robots)
+    
 
-
+  console.log("robots",dataRobots)
     return (
         <View style={{ flex: 1 }} >
             {
@@ -36,17 +26,17 @@ const CleaningHistory = () => {
                             <Image source={grasscutter} style={styles.pic} />
                             <View>
                                 <View style={styles.nameContainer}>
-                                    <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.device.name}</Text>
-                                    <Text style={styles.mblTxt}>{item.device.connected_ssid}</Text>
+                                    <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">{item.data.device.name}</Text>
+                                    <Text style={styles.mblTxt}>{item.data.device.connected_ssid}</Text>
                                 </View>
                                 <View style={styles.msgContainer}>
-                                    <Text style={item.device.status === "running" ? styles.msgTxt : styles.msgTxt2}>{item.device.status}</Text>
+                                    <Text style={item.data.device.status === "running" ? styles.msgTxt : styles.msgTxt2}>{item.data.device.status}</Text>
                                 </View>
                             </View>
                         </View>
                     </TouchableOpacity>
                 )
-            }
+        }
         </View>
     );
 }

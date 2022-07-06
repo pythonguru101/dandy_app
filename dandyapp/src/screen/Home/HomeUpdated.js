@@ -34,11 +34,9 @@ const Home = () => {
 
     const dispatch = useDispatch();
     const current_connection = useSelector(state => state.connection);
-    const serialNo = useSelector(state => state.connection.seralNo);
-    const robotInfo = useSelector(state => state.connection);
+    const serialNo = useSelector(state => state.connection.serialNo);
     const networkInfo = useSelector(state => state.network.connectionStatus);
     const robots = useSelector(state => state.robot.robots);
-    const navigation = useNavigation();
     const [ssid, setSsid] = useState('');
     const [deviceList, setWifiList] = useState([]);
     const [wifiStatus, setWifiStatus] = useState('');
@@ -48,7 +46,6 @@ const Home = () => {
     const [isWifiEnabled, setIsWifiEnabled] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [error, setError] = useState(false);
-    const [connectionsStatus, setConnectionsStatus] = useState(false);
     const [passwordShow, setPasswordShow] = useState(false);
     const [availableDevices, setAvailableDevices] = useState([]);
     const [listVisible, setListVisible] = useState(false);
@@ -97,24 +94,6 @@ const Home = () => {
         }
     };
 
-    //disconnect from wifi
-    // const disconnectFromWifi = (ssid) => {
-
-    //     if (Platform.OS === 'ios') {
-
-    //         WifiManager.disconnectFromSSID(ssid)
-    //             .then(wifi => {
-    //                 console.log(wifi)
-    //             })
-    //             .catch(error => {
-    //                 console.log(error);
-    //             });
-    //     }
-
-    //     else {
-    //         WifiManager.disconnect()
-    //     }
-    // };
 
     //get device list
     const getDeviceList = async () => {
@@ -147,7 +126,9 @@ const Home = () => {
     //get wifi status
     const getWifiStatus = () => {
         DeviceInfo.getAvailableLocationProviders().then(providers => {
-            if (providers.locationServicesEnabled == true) {
+            console.log("status provider", providers)
+            const { fused, gps, network, passive } = providers;
+            if (gps == true) {
                 WifiManager.getCurrentWifiSSID().then(
                     ssid => {
                         console.log("Your current connected wifi SSID is " + ssid);
@@ -161,6 +142,7 @@ const Home = () => {
                 );
             }
             else {
+                console.log("not gps on")
                 alert('Please enable location services')
             }
         })
@@ -242,24 +224,40 @@ const Home = () => {
 
     const saveWifi = async () => {
         DeviceInfo.getAvailableLocationProviders().then(providers => {
-            if (providers.locationServicesEnabled == true) {
-                WifiManager.getCurrentWifiSSID().then(
-                    ssid => {
-                        console.log("Home SSID " + ssid);
-                        dispatch(setHomeSSID(ssid));
+            if (Platform.OS === 'android') {
+                if (providers.gps == true) {
+                    WifiManager.getCurrentWifiSSID().then(
+                        ssid => {
+                            console.log("Home SSID " + ssid);
+                            dispatch(setHomeSSID(ssid));
 
-                    }
-                );
+                        }
+                    );
+                }
+                else {
+                    alert('Please enable location services')
+                }
             }
             else {
-                alert('Please enable location services')
+                if (providers.locationServicesEnabled == true) {
+                    WifiManager.getCurrentWifiSSID().then(
+                        ssid => {
+                            console.log("Home SSID " + ssid);
+                            dispatch(setHomeSSID(ssid));
+
+                        }
+                    );
+                }
+                else {
+                    alert('Please enable location services')
+                }
             }
         })
 
     }
 
     useEffect(() => {
-        dispatch(getRobotData())
+        // dispatch(getRobotData())
         getPermission()
         const unsubscribe = NetInfo.addEventListener(state => {
             setIsWifiEnabled(state.isWifiEnabled)
@@ -273,7 +271,7 @@ const Home = () => {
 
         if (!isWifiEnabled) {
             DeviceInfo.getAvailableLocationProviders().then(providers => {
-                if (providers.locationServicesEnabled == true) {
+                if (providers.gps == true) {
                     WifiManager.setEnabled(true);
                 }
                 else {
@@ -301,14 +299,14 @@ const Home = () => {
             if (res.status === 200) {
                 setError(false)
                 // dispatch set robot data after checking if the robot is already in the list
-                if (!robots.some(robot => robot.device.serial_number === serialNo)) {
+                if (!robots.some(robot => robot.data.device.serial_number === undefined && robot.data.device.serial_number ===serialNo)) {
                     dispatch(setRobotData(res))
                 }
                 dispatch(connectedTo(res.data.device.connected_ssid))
                 setModalVisible(!modalVisible)
                 setTimeout(() => {
                     ToastAndroid.show(
-                        `Connected to${values.ssid}`,
+                        `Connected to  ${values.ssid}`,
                         ToastAndroid.LONG,
                     );
                 }, 1000);
@@ -317,7 +315,7 @@ const Home = () => {
                 setError(true)
                 setTimeout(() => {
                     ToastAndroid.show(
-                        `Can not connect to ${values.ssid}`,
+                        `Can not connect to  ${values.ssid}`,
                         ToastAndroid.LONG,
                     );
                 }, 1000);
@@ -378,6 +376,7 @@ const Home = () => {
                                         inputContainerStyle={styles.input}
                                         keyboardType="default"
                                         style={styles.inputText}
+                                        autoCapitalize="none"
                                     />
                                     <Input
                                         label="Password"
@@ -387,6 +386,7 @@ const Home = () => {
                                         value={values.password}
                                         placeholder="Password"
                                         keyboardType="default"
+                                        autoCapitalize="none"
                                         rightIcon={
                                             <Icon
                                                 name={passwordShow ? 'eye-slash' : 'eye'}

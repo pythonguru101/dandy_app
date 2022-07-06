@@ -7,8 +7,8 @@ import battery from '../../assets/battery.png'
 import { useSelector } from 'react-redux'
 import VersionInfo from 'react-native-version-info';
 const Topcomp = () => {
-    const device = useSelector(state => state.robot.robots[0].device)
-    // console.log(device)
+    const device = useSelector(state => state.robot.robots[0].data.device)
+    console.log(device)
     return (
         <View style={{ flexDirection: "row", marginBottom: 20 }}>
 
@@ -46,7 +46,7 @@ const Topcomp = () => {
 }
 
 const AboutDevice = () => {
-    const device = useSelector(state => state.robot.robots[0].device)
+    const device = useSelector(state => state.robot.robots[0].data.device)
     const devices = useSelector(state => state.robot.robots)
 
     if (devices.lenght === 0) {

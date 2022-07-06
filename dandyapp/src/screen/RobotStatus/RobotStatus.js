@@ -11,10 +11,10 @@ const RobotStatus = () => {
     const [status, setStatus] = useState("")
     const dispatch = useDispatch()
     const robotData = useSelector(state => state.robot.currentDevice.malfunction)
-    const seralNo = useSelector(state => state.connection.seralNo)
+    const serialNo = useSelector(state => state.connection.serialNo)
 
     useEffect(() => {
-        dispatch(getRobotData(seralNo))
+        dispatch(getRobotData(serialNo))
     }, [])
 
     return (
