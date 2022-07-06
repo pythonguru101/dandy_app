@@ -34,7 +34,7 @@ const ButtonComponent = ({ onPress, isLoading, textNext, textPrev }) => {
 
 
 const CheckUpdate = () => {
-  const seralNo = useSelector(state => state.connection.seralNo);
+  const serialNo = useSelector(state => state.connection.serialNo);
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState();
   const [error, setError] = useState(null);
@@ -44,7 +44,7 @@ const CheckUpdate = () => {
     console.log("checkUpdate");
     setIsLoading(true);
     try {
-      const response = await checkSoftwareUpdate(seralNo);
+      const response = await checkSoftwareUpdate(serialNo);
       response.status == 200 ? setIsLoading(false) : setIsLoading(true);
       console.log(response);
       setStatus(2);
@@ -73,7 +73,7 @@ const CheckUpdate = () => {
   const startDownloadUpdate = async () => {
     setIsLoading(true);
     try {
-      const response = await startDownloadingUpdate(seralNo, { is_update_available: true });
+      const response = await startDownloadingUpdate(serialNo, { is_update_available: true });
       if (response.status == 200) {
         downloadfunction()
         ToastAndroid.show('Download started', ToastAndroid.SHORT);
@@ -92,7 +92,7 @@ const CheckUpdate = () => {
   const startUpdateProcess = async () => {
     setIsLoading(true);
     try {
-      const response = await startDownloadingUpdate(seralNo, { is_update_available: true });
+      const response = await startDownloadingUpdate(serialNo, { is_update_available: true });
       if (response.status == 200) {
         updating()
         ToastAndroid.show('Update started', ToastAndroid.SHORT);

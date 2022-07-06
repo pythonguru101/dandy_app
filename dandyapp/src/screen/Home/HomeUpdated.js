@@ -34,7 +34,7 @@ const Home = () => {
 
     const dispatch = useDispatch();
     const current_connection = useSelector(state => state.connection);
-    const serialNo = useSelector(state => state.connection.seralNo);
+    const serialNo = useSelector(state => state.connection.serialNo);
     const networkInfo = useSelector(state => state.network.connectionStatus);
     const robots = useSelector(state => state.robot.robots);
     const [ssid, setSsid] = useState('');
@@ -299,14 +299,14 @@ const Home = () => {
             if (res.status === 200) {
                 setError(false)
                 // dispatch set robot data after checking if the robot is already in the list
-                if (!robots.some(robot => robot.device.serial_number === serialNo)) {
+                if (!robots.some(robot => robot.data.device.serial_number === undefined && robot.data.device.serial_number ===serialNo)) {
                     dispatch(setRobotData(res))
                 }
                 dispatch(connectedTo(res.data.device.connected_ssid))
                 setModalVisible(!modalVisible)
                 setTimeout(() => {
                     ToastAndroid.show(
-                        `Connected to${values.ssid}`,
+                        `Connected to  ${values.ssid}`,
                         ToastAndroid.LONG,
                     );
                 }, 1000);
@@ -315,7 +315,7 @@ const Home = () => {
                 setError(true)
                 setTimeout(() => {
                     ToastAndroid.show(
-                        `Can not connect to ${values.ssid}`,
+                        `Can not connect to  ${values.ssid}`,
                         ToastAndroid.LONG,
                     );
                 }, 1000);

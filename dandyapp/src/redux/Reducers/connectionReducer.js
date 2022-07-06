@@ -6,7 +6,7 @@ const initialState = {
   loading: true,
   wifi: "",
   connectionStatus: false,
-  seralNo: "1",
+  serialNo: "1",
   homeSSID: "",
 };
 
@@ -18,7 +18,7 @@ const ConnectionReducer = (state = initialState, action) => {
         loading: false,
         wifi: action.payload.cname,
         connectionStatus: true,
-        seralNo: action.payload.serial,
+        serialNo: action.payload.serial,
       };
 
     case SET_HOME_SSID:
