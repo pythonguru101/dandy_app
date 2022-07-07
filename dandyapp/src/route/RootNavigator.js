@@ -25,6 +25,7 @@ import Support from '../screen/Support/Support';
 import HomeUpdated from '../screen/Home/HomeUpdated';
 import OnboardingScreen from '../screen/Onboarding/Onboarding';
 import AboutDevice from '../screen/Settings/AboutDevice';
+import EditSerial from '../screen/Settings/EditSerial';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -47,7 +48,7 @@ const ProfileStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -58,7 +59,7 @@ const ProfileStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -69,7 +70,7 @@ const ProfileStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -80,7 +81,7 @@ const ProfileStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -97,7 +98,7 @@ const DeviceStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -111,7 +112,7 @@ const DeviceStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             }
@@ -127,7 +128,7 @@ const SettingsStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -141,7 +142,7 @@ const SettingsStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             }
@@ -154,11 +155,23 @@ const SettingsStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             }
         }} />
+           <Stack.Screen name="EditSerial" component={EditSerial} options={{
+
+                headerShown: true,
+                title: 'Edit Serial',
+                headerStyle: {
+                 backgroundColor: '#fff',
+                },
+                headerTintColor: '#000000',
+                headerTitleStyle: {
+                fontWeight: 'bold',
+                }
+            }} />
 
     </Stack.Navigator>
 )
