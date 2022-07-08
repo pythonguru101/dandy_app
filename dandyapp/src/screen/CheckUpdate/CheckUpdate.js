@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
   ToastAndroid
 } from 'react-native';
-import { checkSoftwareUpdate, startDownloadingUpdate } from '../../services/services';
+import { checkSoftwareUpdate, startDownloadingUpdate ,startUpdate} from '../../services/services';
 import { useSelector } from 'react-redux';
 
 const ButtonComponent = ({ onPress, isLoading, textNext, textPrev }) => {
@@ -46,7 +46,7 @@ const CheckUpdate = () => {
     try {
       const response = await checkSoftwareUpdate(serialNo);
       response.status == 200 ? setIsLoading(false) : setIsLoading(true);
-      console.log(response);
+      console.log("respons on chechiking",response);
       setStatus(2);
       ToastAndroid.show('Checking for Updates', ToastAndroid.SHORT);
     } catch (error) {
@@ -73,7 +73,8 @@ const CheckUpdate = () => {
   const startDownloadUpdate = async () => {
     setIsLoading(true);
     try {
-      const response = await startDownloadingUpdate(serialNo, { is_update_available: true });
+      const response = await startDownloadingUpdate(serialNo, { is_download_available: true });
+      console.log("download", response);
       if (response.status == 200) {
         downloadfunction()
         ToastAndroid.show('Download started', ToastAndroid.SHORT);
@@ -92,7 +93,9 @@ const CheckUpdate = () => {
   const startUpdateProcess = async () => {
     setIsLoading(true);
     try {
-      const response = await startDownloadingUpdate(serialNo, { is_update_available: true });
+      const response = await startUpdate(serialNo, { is_update_available: true });
+      console.log("start update", response);
+
       if (response.status == 200) {
         updating()
         ToastAndroid.show('Update started', ToastAndroid.SHORT);
