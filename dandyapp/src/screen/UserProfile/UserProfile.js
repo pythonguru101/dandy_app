@@ -8,6 +8,7 @@ const data = [
   { id: 1, description: "Saved Maps", route: "SavedMaps" },
   { id: 3, description: "Cleaning History", route: "CleaningHistory" },
   { id: 4, description: "Paired Devices", route: "PairedDevice" },
+  { id: 5, description: "Robot History", route: "RobotHistory" },
 ]
 
 const UserProfile = () => {
