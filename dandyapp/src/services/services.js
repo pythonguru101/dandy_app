@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 
-// const baseUrl = 'http://dandy-robot-';
-// const port = '.local:5000';
-const baseUrl='http://127.0.0.1:'
-const port=''
+const baseUrl = 'http://dandy-robot-';
+const port = '.local:5000';
+// const baseUrl='http://127.0.0.1:'
+// const port=''
 
 export const pingToServer = (serialNo) => {
     console.log("Ping to device", baseUrl + serialNo + '/')
