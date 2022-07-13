@@ -288,7 +288,7 @@ const Home = () => {
             } else {
                 console.log("Permission denied");
             }
-        }, [permission])
+        }, [permission,ssid,serialNo])
     );
 
     const disconnect = () => {
