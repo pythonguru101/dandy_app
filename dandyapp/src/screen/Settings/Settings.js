@@ -8,6 +8,7 @@ import {
 import React from 'react'
 import update from '../../assets/software_update.png'
 import robot from '../../assets/robot.png'
+import serial from '../../assets/serial.png'
 import { useNavigation } from '@react-navigation/native'
 
 const Settings = () => {
@@ -30,6 +31,16 @@ const Settings = () => {
           <View>
             <View style={styles.nameContainer}>
               <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">About Device</Text>
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate("EditSerial")} >
+        <View style={styles.row}>
+          <Image source={serial} style={styles.pic} />
+          <View>
+            <View style={styles.nameContainer}>
+              <Text style={styles.nameTxt} numberOfLines={1} ellipsizeMode="tail">Edit Serial</Text>
             </View>
           </View>
         </View>

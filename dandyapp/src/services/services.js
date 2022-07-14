@@ -34,7 +34,16 @@ export const checkSoftwareUpdate = (serialNo) => {
 }
 
 export const startDownloadingUpdate = (serialNo, value) => {
+    console.log("Start Downloading Updates", baseUrl + serialNo + port + '/download-update', value);
+    return axios.post(baseUrl + serialNo + port + "/download-update", value)
+}
+
+export const startUpdate = (serialNo, value) => {
     console.log("Start Downloading Updates", baseUrl + serialNo + port + '/update-software', value);
     return axios.post(baseUrl + serialNo + port + "/update-software", value)
 }
 
+export const getRobotHistory = (serialNo) => {
+    console.log("Start Downloading Updates", baseUrl + serialNo + port + '/get-robot-history');
+    return axios.get(baseUrl + serialNo + port + "/get-robot-history")
+}

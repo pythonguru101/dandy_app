@@ -49,7 +49,7 @@ const WalkAroundMarker = () => {
         // See error code charts below.
         console.log(error.code, error.message);
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 ,accuracy:"high"},
     );
 
     return () => {
@@ -83,6 +83,7 @@ const WalkAroundMarker = () => {
         timeout: 20000,
         maximumAge: 0,
         distanceFilter: 0,
+        accuracy: "high",
       });
     setTracking(true);
   }
@@ -103,9 +104,6 @@ const WalkAroundMarker = () => {
     Geolocation.stopObserving();
     setTracking(false);
     setModalVisible(true);
-
-
-
   }
 
   // const startTraking = () => {

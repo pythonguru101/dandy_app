@@ -20,7 +20,7 @@ import Card from '../../components/Card/Card';
 import { useDispatch, useSelector } from 'react-redux';
 import { currentConnection } from '../../redux/Actions/index'
 import NetInfo from "@react-native-community/netinfo";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { getRobotData, connectedTo, setHomeSSID } from '../../redux/Actions/index';
 import { setRobotData } from '../../redux/Actions/robotActions';
 import { Formik } from 'formik';
@@ -134,7 +134,11 @@ const Home = () => {
                         console.log("Your current connected wifi SSID is " + ssid);
                         setWifiConnected(true);
                         setWifiStatus("Connected to " + ssid);
-                        setSsid(ssid);
+                        pingToServer(serialNo).then(res => {
+                            setSsid("dandy_robot_" + serialNo);
+                        }).catch(err => {
+                            setSsid(ssid);
+                        })
                     },
                     () => {
                         console.log("Cannot get current SSID!");
@@ -254,21 +258,15 @@ const Home = () => {
             }
         })
 
+
     }
 
     useEffect(() => {
-        // dispatch(getRobotData())
         getPermission()
         const unsubscribe = NetInfo.addEventListener(state => {
             setIsWifiEnabled(state.isWifiEnabled)
         });
         unsubscribe()
-        if (permission === PermissionsAndroid.RESULTS.GRANTED || permission === RESULTS.GRANTED) {
-            getWifiStatus();
-        } else {
-            console.log("Permission denied");
-        }
-
         if (!isWifiEnabled) {
             DeviceInfo.getAvailableLocationProviders().then(providers => {
                 if (providers.gps == true) {
@@ -279,7 +277,19 @@ const Home = () => {
                 }
             })
         }
+
     }, [permission, wifiStatus, isWifiEnabled, networkInfo]);
+
+    useFocusEffect(
+        useCallback(() => {
+            if (permission === PermissionsAndroid.RESULTS.GRANTED || permission === RESULTS.GRANTED) {
+                getWifiStatus();
+
+            } else {
+                console.log("Permission denied");
+            }
+        }, [permission,ssid,serialNo])
+    );
 
     const disconnect = () => {
         WifiManager.disconnect()
@@ -299,7 +309,7 @@ const Home = () => {
             if (res.status === 200) {
                 setError(false)
                 // dispatch set robot data after checking if the robot is already in the list
-                if (!robots.some(robot => robot.data.device.serial_number === undefined && robot.data.device.serial_number ===serialNo)) {
+                if (!robots.some(robot => robot.data.device.serial_number === undefined && robot.data.device.serial_number === serialNo)) {
                     dispatch(setRobotData(res))
                 }
                 dispatch(connectedTo(res.data.device.connected_ssid))
@@ -329,6 +339,7 @@ const Home = () => {
         }
         )
     };
+    console.log("ssid", ssid)
 
     return (
         <SafeAreaView style={styles.container}>

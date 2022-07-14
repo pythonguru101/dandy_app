@@ -25,6 +25,12 @@ import Support from '../screen/Support/Support';
 import HomeUpdated from '../screen/Home/HomeUpdated';
 import OnboardingScreen from '../screen/Onboarding/Onboarding';
 import AboutDevice from '../screen/Settings/AboutDevice';
+import EditSerial from '../screen/Settings/EditSerial';
+import RobotHistory from '../screen/UserProfile/RobotHistory/RobotHistory'
+import HeatMapView from '../components/HeatMapView/HeatMapView';
+import HeatMapAlt from '../screen/HeatMap/HeatMapAlt';
+import HeatMapMenu from '../screen/HeatMap/HeatMapMenu';
+import CustomHeatMap from '../screen/HeatMap/CustomHeatMap';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -47,7 +53,7 @@ const ProfileStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -58,7 +64,7 @@ const ProfileStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -69,7 +75,7 @@ const ProfileStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -80,7 +86,29 @@ const ProfileStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+        }} />
+         <Stack.Screen name="RobotHistory" component={RobotHistory} options={{
+            headerShown: true,
+            title: 'Robot History',
+            headerStyle: {
+                backgroundColor: '#fff',
+            },
+            headerTintColor: '#000000',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+        }} />
+         <Stack.Screen name="HeatMapView" component={HeatMapView} options={{
+            headerShown: true,
+            title: 'History View',
+            headerStyle: {
+                backgroundColor: '#fff',
+            },
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -97,7 +125,7 @@ const DeviceStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -111,7 +139,7 @@ const DeviceStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             }
@@ -127,7 +155,7 @@ const SettingsStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -141,7 +169,7 @@ const SettingsStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             }
@@ -154,11 +182,68 @@ const SettingsStack = () => (
             headerStyle: {
                 backgroundColor: '#fff',
             },
-            headerTintColor: '#e2e2e2',
+            headerTintColor: '#000000',
             headerTitleStyle: {
                 fontWeight: 'bold',
             }
         }} />
+           <Stack.Screen name="EditSerial" component={EditSerial} options={{
+
+                headerShown: true,
+                title: 'Edit Serial',
+                headerStyle: {
+                 backgroundColor: '#fff',
+                },
+                headerTintColor: '#000000',
+                headerTitleStyle: {
+                fontWeight: 'bold',
+                }
+            }} />
+
+    </Stack.Navigator>
+)
+
+const HeatMapStack = () => (
+    <Stack.Navigator>
+        <Stack.Screen name="HeatMapMenu" component={HeatMapMenu} options={{
+            headerShown: true,
+            title: 'Select Catagory',
+            headerStyle: {
+                backgroundColor: '#fff',
+            },
+            headerTintColor: '#000000',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+            headerLeft: () => (
+                <DrawerToggleButton />
+            )
+        }} />
+        
+        <Stack.Screen name="CustomHeatMap" component={CustomHeatMap} options={{
+
+headerShown: true,
+title: 'Heat Maps',
+headerStyle: {
+ backgroundColor: '#fff',
+},
+headerTintColor: '#000000',
+headerTitleStyle: {
+fontWeight: 'bold',
+}
+}} />
+           <Stack.Screen name="HeatMapAlt" component={HeatMapAlt} options={{
+
+                headerShown: true,
+                title: 'Heat Map',
+                headerStyle: {
+                 backgroundColor: '#fff',
+                },
+                headerTintColor: '#000000',
+                headerTitleStyle: {
+                fontWeight: 'bold',
+                }
+            }} />
 
     </Stack.Navigator>
 )
@@ -199,8 +284,9 @@ export default function App() {
                         <Icon name="map-marked-alt" size={24} color="#808080" />)
                 }} />
                 {/* } */}
-                <Drawer.Screen name="HeatMap" component={HeatMap} options={{
+                <Drawer.Screen name="HeatMap" component={HeatMapStack} options={{
                     title: 'Heat Map',
+                    headerShown: false,
                     drawerIcon: ({ tintColor }) => (
                         <Icon name="fire" size={24} color="#808080" />)
                 }} />
